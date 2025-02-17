@@ -48,6 +48,13 @@
         <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
         <version>2.8.4</version>
         </dependency>
+
+        <!-- Dependency for MySQL Database -->
+        <dependency>
+            <groupId>com.mysql</groupId>
+            <artifactId>mysql-connector-j</artifactId>
+            <version>8.3.0</version>
+        </dependency>
     </dependencies>
 
     <build>
