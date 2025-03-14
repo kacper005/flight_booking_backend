@@ -2,6 +2,9 @@ package edu.ntnu.flightbookingbackend.service;
 
 import edu.ntnu.flightbookingbackend.model.User;
 import edu.ntnu.flightbookingbackend.repository.UserRepository;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -10,6 +13,7 @@ import org.springframework.stereotype.Service;
  * Business logic related to users.
  */
 @Service
+@Tag(name = "User Service", description = "Business logic related to users")
 public class UserService {
   @Autowired
   private UserRepository userRepository;
@@ -19,6 +23,7 @@ public class UserService {
    *
    * @return A list of authors, empty list if there are none
    */
+  @Operation(summary = "Get all users", description = "Get all users from the application state")
   public Iterable<User> getAll() {
     return userRepository.findAll();
   }
@@ -29,6 +34,7 @@ public class UserService {
    * @param id ID of the user to find
    * @return The user or null if none found by the given ID
    */
+  @Operation(summary = "Find user by ID", description = "Fetches a user based on the provided ID")
   public User findByID(int id) {
     Optional<User> user = userRepository.findById(id);
     return user.orElse(null);
@@ -40,6 +46,7 @@ public class UserService {
    * @param user User to persist
    * @return {@code true} when user is added, {@code false} on error
    */
+  @Operation(summary = "Add a new user", description = "Add a new user to the application state")
   public boolean add(User user) {
     boolean added = false;
     boolean emailExists = false;
@@ -69,6 +76,7 @@ public class UserService {
    * @return {@code true} when user is deleted, {@code false} when user was not found in the
    * database
    */
+  @Operation(summary = "Remove a user", description = "Remove a user from the application state")
   public boolean remove(int userID) {
     Optional<User> user = userRepository.findById(userID);
     if (user.isPresent()) {
@@ -84,6 +92,8 @@ public class UserService {
    * @param user   User data to update
    * @return Null on success, error message on error
    */
+  @Operation(summary = "Update a user",
+      description = "Update the details of a user in the application state")
   public String update(Integer userId, User user) {
     String errorMessage = null;
     User existingUser = findByID(userId);
@@ -115,6 +125,8 @@ public class UserService {
    *
    * @return The total number of users stored in the database
    */
+  @Operation(summary = "Get user count",
+      description = "Get the total number of users in the database")
   public long getCount() {
     return userRepository.count();
   }

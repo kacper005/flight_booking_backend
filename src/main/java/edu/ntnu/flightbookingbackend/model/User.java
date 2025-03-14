@@ -1,5 +1,6 @@
 package edu.ntnu.flightbookingbackend.model;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
@@ -8,19 +9,31 @@ import jakarta.persistence.Id;
  * A user of the system. Entity class.
  */
 @Entity
+@Schema(description = "A user of the system")
 public class User {
   @Id
   @GeneratedValue
+  @Schema(description = "The id of the user")
   private int userId;
+  @Schema(description = "The email of the user")
   private String email;
+  @Schema(description = "The password of the user")
   private String password;
+  @Schema(description = "The phone number of the user")
   private int phone;
+  @Schema(description = "The first name of the user")
   private String firstName;
+  @Schema(description = "The last name of the user")
   private String lastName;
+  @Schema(description = "The date of birth of the user")
   private String dateOfBirth;
+  @Schema(description = "The country of residence of the user")
   private String country;
+  @Schema(description = "The gender of the user")
   private String gender;
+  @Schema(description = "The role of the user")
   private String role;
+  @Schema(description = "The date the user was created")
   private String createdAt;
 
   // TODO: Create join table for user to booking and feedback
