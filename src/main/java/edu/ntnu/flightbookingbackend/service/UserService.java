@@ -42,9 +42,19 @@ public class UserService {
    */
   public boolean add(User user) {
     boolean added = false;
+    boolean emailExists = false;
+
     if (user != null) {
       User existingUser = findByID(user.getUserId());
-      if (existingUser == null) {
+
+      // Check if the email already exists in the database
+      for (User u : userRepository.findAll()) {
+        if (u.getEmail().equals(user.getEmail())) {
+          emailExists = true;
+        }
+      }
+
+      if (existingUser == null && !emailExists) {
         userRepository.save(user);
         added = true;
       }
@@ -71,7 +81,7 @@ public class UserService {
    * Update a user in the application state (persist in the database).
    *
    * @param userId ID of the user to update
-   * @param user User data to update
+   * @param user   User data to update
    * @return Null on success, error message on error
    */
   public String update(Integer userId, User user) {
@@ -83,6 +93,15 @@ public class UserService {
       errorMessage = "No user data provided.";
     } else if (user.getUserId() != userId) {
       errorMessage = "User ID does not match the ID in JSON data (response body).";
+    }
+
+    // Check if the email already exists in the database for another user
+    if (user != null) {
+      for (User u : userRepository.findAll()) {
+        if (u.getEmail().equals(user.getEmail()) && u.getUserId() != user.getUserId()) {
+          errorMessage = "Email already exists in the database.";
+        }
+      }
     }
 
     if (errorMessage == null) {
