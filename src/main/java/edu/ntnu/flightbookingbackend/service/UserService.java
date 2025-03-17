@@ -29,7 +29,7 @@ public class UserService {
   }
 
   /**
-   * Finds auser by ID. Returns the user if found, null otherwise.
+   * Finds a user by ID. Returns the user if found, null otherwise.
    *
    * @param id ID of the user to find
    * @return The user or null if none found by the given ID
@@ -61,6 +61,7 @@ public class UserService {
         }
       }
 
+      // Add the user if it does not already exist in the database
       if (existingUser == null && !emailExists) {
         userRepository.save(user);
         added = true;
