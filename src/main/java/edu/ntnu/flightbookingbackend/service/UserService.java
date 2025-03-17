@@ -95,7 +95,7 @@ public class UserService {
    */
   @Operation(summary = "Update a user",
       description = "Update the details of a user in the application state")
-  public String update(Integer userId, User user) {
+  public String update(int userId, User user) {
     String errorMessage = null;
     User existingUser = findByID(userId);
     if (existingUser == null) {

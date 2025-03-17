@@ -106,10 +106,11 @@ public class BookingService {
    */
   @Operation(summary = "Update a booking",
       description = "Update the details of a booking in the application state")
-  public String update(Integer bookingId, Booking booking) {
+  public String update(int bookingId, Booking booking) {
     String errorMessage = null;
     Booking existingBooking = findByID(bookingId);
     UserService userService = new UserService();
+    // TODO: Uncomment the code below when FlightService.findByID() is implemented
     // FlightService flightService = new FlightService();
     if (existingBooking == null) {
       errorMessage = "No booking with id " + bookingId + " found.";
