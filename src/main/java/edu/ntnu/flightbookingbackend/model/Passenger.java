@@ -16,6 +16,7 @@ public class Passenger {
   @Schema(description = "The id of the passenger")
   private int passengerId;
   @Schema(description = "The booking id of the passenger")
+  // TODO: Add foreign key to bookingId
   private int bookingId;
   @Schema(description = "The first name of the passenger")
   private String firstName;
