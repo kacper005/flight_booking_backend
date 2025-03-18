@@ -56,8 +56,9 @@ public class FeedbackService {
      * @return A list of feedback submitted by the user.
      */
     @Operation(summary = "Find feedback by user ID", description = "Fetches all feedback submitted by a specific user.")
-    public List<Feedback> findByUserId(int userId) {
-        return feedbackRepository.findByUserId(userId);
+    public Feedback findByUserId(int userId) {
+        Optional<Feedback> feedback = feedbackRepository.findById(userId);
+        return feedback.orElse(null);
     }
 
     /**

@@ -1,14 +1,11 @@
 package edu.ntnu.flightbookingbackend.repository;
 
 import edu.ntnu.flightbookingbackend.model.Feedback;
-import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.repository.CrudRepository;
 
-
-import java.util.List;
 
 /**
  * Repository interface for accessing Feedback data in the database.
  */
-public interface FeedbackRepository extends JpaRepository<Feedback, Integer> {
-    List<Feedback> findByUserId(int userId);
+public interface FeedbackRepository extends CrudRepository<Feedback, Integer> {
 }
