@@ -7,4 +7,4 @@ import org.springframework.data.repository.CrudRepository;
  * Repository interface for accessing Airline data in the database.
  */
 
-public interface AirlineRepository extends CrudRepository<Airline, Long> {}
+public interface AirlineRepository extends CrudRepository<Airline, Integer> {}

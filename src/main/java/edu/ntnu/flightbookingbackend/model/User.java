@@ -4,6 +4,12 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToMany;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 /**
  * A user of the system. Entity class.
@@ -36,8 +42,11 @@ public class User {
   @Schema(description = "The date the user was created")
   private String createdAt;
 
-  // TODO: Create join table for user to booking and feedback
-  // TODO: Create relationship between user and other classes (one-to-many, many-to-many etc.)
+  @OneToMany(mappedBy = "booking")
+  private List<Booking> bookings = new ArrayList<>();
+
+
+  // TODO: Create join table for user to feedback
 
   public User() {
   }
@@ -128,5 +137,13 @@ public class User {
 
   public void setCreatedAt(String createdAt) {
     this.createdAt = createdAt;
+  }
+
+  public List<Booking> getBookings() {
+        return bookings;
+  }
+
+  public void setBookings(List<Booking> bookings) {
+        this.bookings = bookings;
   }
 }
