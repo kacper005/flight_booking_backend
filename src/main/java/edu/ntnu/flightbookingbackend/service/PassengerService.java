@@ -61,14 +61,14 @@ public class PassengerService {
 
       // Check if the booking id already exists in the database
       BookingService bookingService = new BookingService();
-      if (bookingService.findByID(passenger.getBookingId()) != null) {
+      if (bookingService.findByID(passenger.getBooking().getBookingId()) != null) {
         bookingIdExists = true;
       }
 
       // Checks that a booking ID does not have two of the same passengers with the same passport
       // number
       for (Passenger p : passengerRepository.findAll()) {
-        if (p.getBookingId() == passenger.getBookingId() &&
+        if (p.getBooking().getBookingId() == passenger.getBooking().getBookingId() &&
             p.getPassportNumber().equals(passenger.getPassportNumber())) {
           multiplePassengers = true;
         }
@@ -119,8 +119,8 @@ public class PassengerService {
       errorMessage = "No passenger data provided.";
     } else if (passenger.getPassengerId() != passengerId) {
       errorMessage = "Passenger ID does not match passenger ID in JSON data (response body).";
-    } else if (bookingService.findByID(passenger.getBookingId()) == null) {
-      errorMessage = "Booking with ID " + passenger.getBookingId() + " does not exist.";
+    } else if (bookingService.findByID(passenger.getBooking().getBookingId()) == null) {
+      errorMessage = "Booking with ID " + passenger.getBooking().getBookingId() + " does not exist.";
     }
 
     if (errorMessage == null) {
