@@ -35,7 +35,6 @@ public class Feedback {
     @Schema(description = "The timestamp when the feedback was submitted")
     private String createdAt;
 
-    // Default constructor
     public Feedback() {
     }
 

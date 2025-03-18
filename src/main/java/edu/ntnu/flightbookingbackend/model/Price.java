@@ -4,6 +4,8 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 
 /**
  * A price for a flight, with class and currency.
@@ -15,9 +17,11 @@ public class Price {
   @GeneratedValue
   @Schema(description = "The id of the price")
   private int priceId;
-  @Schema(description = "The id of the flight")
-  // TODO: Add foreign key to flightId
-  private int flightId;
+
+  @ManyToOne
+  @JoinColumn(name = "flightId", nullable = false)
+  private Flight flight;
+
   @Schema(description = "The type of class for the flight")
   private String classType;
   @Schema(description = "The price of the flight")
@@ -36,12 +40,12 @@ public class Price {
         this.priceId = priceId;
     }
 
-    public int getFlightId() {
-        return flightId;
+    public Flight getFlight() {
+        return flight;
     }
 
-    public void setFlightId(int flightId) {
-        this.flightId = flightId;
+    public void setFlight(Flight flight) {
+        this.flight = flight;
     }
 
     public String getClassType() {

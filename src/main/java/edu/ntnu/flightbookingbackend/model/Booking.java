@@ -22,19 +22,18 @@ public class Booking {
   @GeneratedValue
   @Schema(description = "The id of the booking")
   private int bookingId;
-  @Schema(description = "The user id of the booking")
-  private int userId;
-  @Schema(description = "The flight id of the booking")
-  private int flightId;
   @Schema(description = "The date of the booking")
   private String bookingDate;
   @Schema(description = "The total price of the booking")
   private float totalPrice;
+
   @ManyToOne
   @JoinColumn(name = "user_id", nullable = false)
   private User user;
   @OneToMany(mappedBy = "booking")
   private List<Flight> flights = new ArrayList<>();
+  @OneToMany(mappedBy = "booking")
+  private List<Passenger> passengers = new ArrayList<>();
 
   public Booking() {
   }
@@ -45,22 +44,6 @@ public class Booking {
 
   public void setBookingId(int bookingId) {
     this.bookingId = bookingId;
-  }
-
-  public int getUserId() {
-    return userId;
-  }
-
-  public void setUserId(int userId) {
-    this.userId = userId;
-  }
-
-  public int getFlightId() {
-    return flightId;
-  }
-
-  public void setFlightId(int flightId) {
-    this.flightId = flightId;
   }
 
   public String getBookingDate() {
@@ -93,5 +76,13 @@ public class Booking {
 
   public void setFlights(List<Flight> flights) {
     this.flights = flights;
+  }
+
+  public List<Passenger> getPassengers() {
+    return passengers;
+  }
+
+  public void setPassengers(List<Passenger> passengers) {
+    this.passengers = passengers;
   }
 }

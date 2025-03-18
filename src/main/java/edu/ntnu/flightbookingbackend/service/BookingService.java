@@ -1,6 +1,7 @@
 package edu.ntnu.flightbookingbackend.service;
 
 import edu.ntnu.flightbookingbackend.model.Booking;
+import edu.ntnu.flightbookingbackend.model.Flight;
 import edu.ntnu.flightbookingbackend.repository.BookingRepository;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -59,15 +60,11 @@ public class BookingService {
 
       // Check if the user already exists in the database
       UserService userService = new UserService();
-      if (userService.findByID(booking.getUserId()) != null) {
+      if (userService.findByID(booking.getUser().getUserId()) != null) {
         userExists = true;
       }
 
-      // Check if the flight already exists in the database
-      FlightService flightService = new FlightService();
-      if (flightService.findByID(booking.getFlightId()) != null) {
-        flightExists = true;
-      }
+      // TODO: Check if the flight already exists in the database
 
       // Add the booking if it does not already exist in the database and the user and flight exist
       if (existingBooking == null && userExists && flightExists) {
@@ -115,11 +112,11 @@ public class BookingService {
       errorMessage = "No booking data provided.";
     } else if (booking.getBookingId() != bookingId) {
       errorMessage = "Booking ID does not match the ID in JSON data (response body).";
-    } else if (userService.findByID(booking.getUserId()) == null) {
-      errorMessage = "User with ID " + booking.getUserId() + " does not exist.";
-    } else if (flightService.findByID(booking.getFlightId()) == null) {
-      errorMessage = "Flight with ID " + booking.getFlightId() + " does not exist.";
+    } else if (userService.findByID(booking.getUser().getUserId()) == null) {
+      errorMessage = "User with ID " + booking.getUser().getUserId() + " does not exist.";
     }
+
+    // TODO: Check if flightId exists
 
     if (errorMessage == null) {
       bookingRepository.save(booking);

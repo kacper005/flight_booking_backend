@@ -68,7 +68,5 @@ public class Airline {
   public void setLogoUrl(String logoUrl) {
     this.logoUrl = logoUrl;
   }
-
-
 }
 

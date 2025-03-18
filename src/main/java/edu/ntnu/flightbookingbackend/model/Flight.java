@@ -4,6 +4,8 @@ import edu.ntnu.flightbookingbackend.enums.FlightStatus;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Represents a flight entity in the flight booking system.
@@ -49,6 +51,10 @@ public class Flight {
   @ManyToOne
   @JoinColumn(name = "bookingId")
   private Booking booking;
+
+  @OneToMany(mappedBy = "flight")
+  private List<Price> priceList = new ArrayList<>();
+
 
   public Flight() {
   }
@@ -123,6 +129,14 @@ public class Flight {
 
   public void setBooking(Booking booking) {
     this.booking = booking;
+  }
+
+  public List<Price> getPriceList() {
+    return priceList;
+  }
+
+  public void setPriceList(List<Price> priceList) {
+    this.priceList = priceList;
   }
 
 }

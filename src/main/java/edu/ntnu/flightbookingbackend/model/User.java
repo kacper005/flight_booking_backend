@@ -42,6 +42,8 @@ public class User {
   @OneToMany(mappedBy = "user")
   private List<Booking> bookings = new ArrayList<>();
 
+  @OneToMany(mappedBy = "user")
+  private List<Feedback> feedback = new ArrayList<>();
 
   // TODO: Create join table for user to feedback
 
@@ -143,4 +145,12 @@ public class User {
   public void setBookings(List<Booking> bookings) {
         this.bookings = bookings;
   }
+
+  public List<Feedback> getFeedback() {
+        return feedback;
+  }
+
+    public void setFeedback(List<Feedback> feedback) {
+            this.feedback = feedback;
+    }
 }

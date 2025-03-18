@@ -4,6 +4,8 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 
 /**
  * A passenger connected to a booking.
@@ -15,9 +17,6 @@ public class Passenger {
   @GeneratedValue
   @Schema(description = "The id of the passenger")
   private int passengerId;
-  @Schema(description = "The booking id of the passenger")
-  // TODO: Add foreign key to bookingId
-  private int bookingId;
   @Schema(description = "The first name of the passenger")
   private String firstName;
   @Schema(description = "The last name of the passenger")
@@ -26,6 +25,10 @@ public class Passenger {
   private String dateOfBirth;
   @Schema(description = "The passport number of the passenger")
   private String passportNumber;
+
+  @ManyToOne
+  @JoinColumn(name = "bookingId")
+  private Booking booking;
 
   // TODO: Make sure that the passenger is connected to a booking with an existing booking id (frontend or backend logic)
 
@@ -38,14 +41,6 @@ public class Passenger {
 
   public void setPassengerId(int passengerId) {
     this.passengerId = passengerId;
-  }
-
-  public int getBookingId() {
-    return bookingId;
-  }
-
-  public void setBookingId(int bookingId) {
-    this.bookingId = bookingId;
   }
 
   public String getFirstName() {
@@ -78,5 +73,13 @@ public class Passenger {
 
   public void setPassportNumber(String passportNumber) {
     this.passportNumber = passportNumber;
+  }
+
+  public Booking getBooking() {
+    return booking;
+  }
+
+  public void setBooking(Booking booking) {
+    this.booking = booking;
   }
 }
