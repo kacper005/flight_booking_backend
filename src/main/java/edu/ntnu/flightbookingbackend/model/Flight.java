@@ -26,12 +26,12 @@ public class Flight {
   @Schema(description = "Flight number assigned by the airline.", example = "AA123")
   private String flightNumber;
 
-  @ManyToOne
+  @OneToOne
   @JoinColumn(name = "departure_airport_id", nullable = false)
   @Schema(description = "Airport from which the flight departs.")
   private Airport departureAirport;
 
-  @ManyToOne
+  @OneToOne
   @JoinColumn(name = "arrival_airport_id", nullable = false)
   @Schema(description = "Airport at which the flight arrives.")
   private Airport arrivalAirport;
@@ -45,6 +45,10 @@ public class Flight {
   @Enumerated(EnumType.STRING)
   @Schema(description = "Current status of the flight.", example = "Scheduled,Delayed,Cancelled")
   private FlightStatus status;
+
+  @ManyToOne
+  @JoinColumn(name = "bookingId")
+  private Booking booking;
 
   public Flight() {
   }
@@ -111,6 +115,14 @@ public class Flight {
 
   public void setStatus(FlightStatus status) {
     this.status = status;
+  }
+
+  public Booking getBooking() {
+    return booking;
+  }
+
+  public void setBooking(Booking booking) {
+    this.booking = booking;
   }
 
 }

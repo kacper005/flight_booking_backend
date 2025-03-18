@@ -89,5 +89,3 @@ public class FlightService {
         return removed;
     }
 }
-
-//TODO: Create relation with bookings
