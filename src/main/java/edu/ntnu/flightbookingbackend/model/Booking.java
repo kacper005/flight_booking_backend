@@ -7,6 +7,9 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -22,18 +25,16 @@ public class Booking {
   @Schema(description = "The user id of the booking")
   private int userId;
   @Schema(description = "The flight id of the booking")
-  // TODO: Handle foreign key flightId
   private int flightId;
   @Schema(description = "The date of the booking")
   private String bookingDate;
   @Schema(description = "The total price of the booking")
   private float totalPrice;
-
   @ManyToOne
   @JoinColumn(name = "user_id", nullable = false)
   private User user;
-
-  // TODO: Create relationship between booking and userID and flightID
+  @OneToMany(mappedBy = "booking")
+  private List<Flight> flights = new ArrayList<>();
 
   public Booking() {
   }
@@ -84,5 +85,13 @@ public class Booking {
 
   public void setUser(User user) {
     this.user = user;
+  }
+
+  public List<Flight> getFlights() {
+    return flights;
+  }
+
+  public void setFlights(List<Flight> flights) {
+    this.flights = flights;
   }
 }

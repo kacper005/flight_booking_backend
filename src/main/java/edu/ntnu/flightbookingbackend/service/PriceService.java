@@ -1,5 +1,6 @@
 package edu.ntnu.flightbookingbackend.service;
 
+import edu.ntnu.flightbookingbackend.model.Flight;
 import edu.ntnu.flightbookingbackend.model.Price;
 import edu.ntnu.flightbookingbackend.repository.PriceRepository;
 import io.swagger.v3.oas.annotations.Operation;
@@ -53,14 +54,12 @@ public class PriceService {
       Price existingPrice = findByID(price.getPriceId());
 
       // Check if the flight already exists in the database
-      // TODO: Check if the flight exists in the database
-      //  (uncomment the code below when the FlightService is implemented)
-      // FlightService flightService = new FlightService();
-      // for (Flight f : flightService.getAll()) {
-      //   if (f.getFlightId() == price.getFlight().getFlightId()) {
-      //     flightExists = true;
-      //   }
-      // }
+      FlightService flightService = new FlightService();
+      for (Flight f : flightService.getAll()) {
+        if (f.getFlightId() == price.getFlightId()) {
+          flightExists = true;
+        }
+      }
 
       if (existingPrice == null && flightExists) {
         priceRepository.save(price);
@@ -97,16 +96,16 @@ public class PriceService {
   public String update(int priceId, Price price) {
     String errorMessage = null;
     Price existingPrice = findByID(priceId);
-    // TODO: Uncomment the code below when FlightService.findByID() is implemented
-    // FlightService flightService = new FlightService();
+    FlightService flightService = new FlightService();
     if (existingPrice == null) {
       errorMessage = "No price with id " + priceId + " found";
     } else if (price == null) {
       errorMessage = "No price provided";
     } else if (price.getPriceId() != priceId) {
       errorMessage = "Price ID does no match the ID in JSON data (response body)";
+    } else if (flightService.findByID(price.getFlightId()) == null) {
+      errorMessage = "Flight with ID " + price.getFlightId() + " does not exist.";
     }
-    // TODO: Check if the flight exists in the database - Use method from FlightService
 
     if (errorMessage == null) {
       priceRepository.save(price);

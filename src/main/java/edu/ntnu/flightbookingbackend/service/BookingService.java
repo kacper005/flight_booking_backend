@@ -64,12 +64,10 @@ public class BookingService {
       }
 
       // Check if the flight already exists in the database
-      // TODO: Use FlightService.findByID() method to check if the flight exists
-      //  (uncomment the code below when FlightService.findByID() is implemented)
-      // FlightService flightService = new FlightService();
-      // if (flightService.findByID(booking.getFlightId()) != null) {
-      //   flightExists = true;
-      // }
+      FlightService flightService = new FlightService();
+      if (flightService.findByID(booking.getFlightId()) != null) {
+        flightExists = true;
+      }
 
       // Add the booking if it does not already exist in the database and the user and flight exist
       if (existingBooking == null && userExists && flightExists) {
@@ -110,8 +108,7 @@ public class BookingService {
     String errorMessage = null;
     Booking existingBooking = findByID(bookingId);
     UserService userService = new UserService();
-    // TODO: Uncomment the code below when FlightService.findByID() is implemented
-    // FlightService flightService = new FlightService();
+    FlightService flightService = new FlightService();
     if (existingBooking == null) {
       errorMessage = "No booking with id " + bookingId + " found.";
     } else if (booking == null) {
@@ -120,8 +117,9 @@ public class BookingService {
       errorMessage = "Booking ID does not match the ID in JSON data (response body).";
     } else if (userService.findByID(booking.getUserId()) == null) {
       errorMessage = "User with ID " + booking.getUserId() + " does not exist.";
+    } else if (flightService.findByID(booking.getFlightId()) == null) {
+      errorMessage = "Flight with ID " + booking.getFlightId() + " does not exist.";
     }
-    // TODO: Check if the flight exists in the database - Use method from FlightService
 
     if (errorMessage == null) {
       bookingRepository.save(booking);
