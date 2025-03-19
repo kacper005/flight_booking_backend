@@ -4,6 +4,12 @@ Flight Booking Backend repo by group 3
 
 ## Important information about DB connection
 
-In order to connect to the database when you run `FlightBookingApplication.java` you need to be 
-connected to the NTNU network or use the Cisco VPN to connect to the NTNU network. This is due to 
-the server only being available through the NTNU network.
+This application is running the MySQL database in a Docker Container. Before starting the 
+application you need to have Docker Desktop installed and running. When this is done, do the 
+following steps in the IDE terminal:
+
+1. Navigate to the "docker" folder in the project with `cd ./docker/`.
+2. Run the command `docker compose up` to start the MySQL database. If this command has been run earlier, you can use `docker compose start` to start the container.
+3. Run the `FlightBookingBackendApplication` class to start the application. 
+4. To stop the docker container, run the command `docker compose stop` in the "docker" folder.
+
