@@ -35,7 +35,7 @@ public class UserService {
    * @return The user or null if none found by the given ID
    */
   @Operation(summary = "Find user by ID", description = "Fetches a user based on the provided ID")
-  public User findByID(int id) {
+  public User findByID(Integer id) {
     Optional<User> user = userRepository.findById(id);
     return user.orElse(null);
   }
