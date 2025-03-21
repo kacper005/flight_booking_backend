@@ -1,6 +1,9 @@
 package edu.ntnu.flightbookingbackend.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
@@ -17,7 +20,8 @@ public class User {
   @Id
   @GeneratedValue
   @Schema(description = "The id of the user")
-  private int userId;
+  private Integer userId;
+  @Column(unique = true, nullable = false)
   @Schema(description = "The email of the user")
   private String email;
   @Schema(description = "The password of the user")
@@ -39,22 +43,23 @@ public class User {
   @Schema(description = "The date the user was created")
   private String createdAt;
 
-  @OneToMany(mappedBy = "user")
+  @OneToMany(mappedBy = "user", cascade = CascadeType.PERSIST)
+  @JsonIgnore // Prevent infinite loop
   private List<Booking> bookings = new ArrayList<>();
 
-  @OneToMany(mappedBy = "user")
+  @OneToMany(mappedBy = "user", cascade = CascadeType.PERSIST)
+  @JsonIgnore // Prevent infinite loop
   private List<Feedback> feedback = new ArrayList<>();
 
-  // TODO: Create join table for user to feedback
 
   public User() {
   }
 
-  public int getUserId() {
+  public Integer getUserId() {
     return userId;
   }
 
-  public void setUserId(int userId) {
+  public void setUserId(Integer userId) {
     this.userId = userId;
   }
 

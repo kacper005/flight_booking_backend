@@ -1,10 +1,13 @@
 package edu.ntnu.flightbookingbackend.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
@@ -21,28 +24,34 @@ public class Booking {
   @Id
   @GeneratedValue
   @Schema(description = "The id of the booking")
-  private int bookingId;
+  private Integer bookingId;
   @Schema(description = "The date of the booking")
   private String bookingDate;
   @Schema(description = "The total price of the booking")
   private float totalPrice;
 
   @ManyToOne
-  @JoinColumn(name = "user_id", nullable = false)
+  @JoinColumn(name = "user_id", nullable = true)
+  @JsonIgnore // Prevent infinite loop
   private User user;
-  @OneToMany(mappedBy = "booking")
+  @ManyToMany
+  @JoinTable(
+      name = "booking_flight",
+      joinColumns = @JoinColumn(name = "booking_id"),
+      inverseJoinColumns = @JoinColumn(name = "flight_id")
+  )
   private List<Flight> flights = new ArrayList<>();
-  @OneToMany(mappedBy = "booking")
+  @OneToMany(mappedBy = "booking", cascade = CascadeType.ALL, orphanRemoval = true)
   private List<Passenger> passengers = new ArrayList<>();
 
   public Booking() {
   }
 
-  public int getBookingId() {
+  public Integer getBookingId() {
     return bookingId;
   }
 
-  public void setBookingId(int bookingId) {
+  public void setBookingId(Integer bookingId) {
     this.bookingId = bookingId;
   }
 
@@ -76,6 +85,16 @@ public class Booking {
 
   public void setFlights(List<Flight> flights) {
     this.flights = flights;
+  }
+
+  public void addFlight(Flight flight) {
+    this.flights.add(flight);
+    flight.getBookings().add(this);
+  }
+
+  public void removeFlight(Flight flight) {
+    this.flights.remove(flight);
+    flight.getBookings().remove(this);
   }
 
   public List<Passenger> getPassengers() {

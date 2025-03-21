@@ -10,13 +10,14 @@ public class Airline {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Schema(description = "Unique identifier for the airline.", example = "1")
-  private int airlineId;
+  private Integer airlineId;
 
+  @Column(nullable = false)
   @Schema(description = "Name of the airline.", example = "Norwegian Air Shuttle")
   private String name;
 
   @Column(unique = true, nullable = false)
-  @Schema(description = "Unique airline code (IATA).", example = "DH")
+  @Schema(description = "Unique airline code.", example = "DH")
   private String code;
 
   @Schema(description = "Country where the airline is registered.", example = "Norway")
@@ -29,11 +30,11 @@ public class Airline {
   public Airline() {
   }
 
-  public int getAirlineId() {
+  public Integer getAirlineId() {
     return airlineId;
   }
 
-  public void setAirlineId(int airlineId) {
+  public void setAirlineId(Integer airlineId) {
     this.airlineId = airlineId;
   }
 

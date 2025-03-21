@@ -1,11 +1,14 @@
 package edu.ntnu.flightbookingbackend.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
+import java.util.List;
 
 /**
  * A price for a flight, with class and currency.
@@ -16,11 +19,11 @@ public class Price {
   @Id
   @GeneratedValue
   @Schema(description = "The id of the price")
-  private int priceId;
+  private Integer priceId;
 
-  @ManyToOne
-  @JoinColumn(name = "flightId", nullable = false)
-  private Flight flight;
+  @ManyToMany(mappedBy = "prices")
+  @JsonBackReference
+  private List<Flight> flights;
 
   @Schema(description = "The type of class for the flight")
   private String classType;
@@ -32,43 +35,53 @@ public class Price {
   public Price() {
   }
 
-    public int getPriceId() {
-        return priceId;
-    }
+  public Integer getPriceId() {
+    return priceId;
+  }
 
-    public void setPriceId(int priceId) {
-        this.priceId = priceId;
-    }
+  public void setPriceId(Integer priceId) {
+    this.priceId = priceId;
+  }
 
-    public Flight getFlight() {
-        return flight;
-    }
+  public List<Flight> getFlights() {
+    return flights;
+  }
 
-    public void setFlight(Flight flight) {
-        this.flight = flight;
-    }
+  public void setFlights(List<Flight> flights) {
+    this.flights = flights;
+  }
 
-    public String getClassType() {
-        return classType;
-    }
+  public void addFlight(Flight flight) {
+    this.flights.add(flight);
+    flight.getPrices().add(this);
+  }
 
-    public void setClassType(String classType) {
-        this.classType = classType;
-    }
+  public void removeFlight(Flight flight) {
+    this.flights.remove(flight);
+    flight.getPrices().remove(this);
+  }
 
-    public float getPrice() {
-        return price;
-    }
+  public String getClassType() {
+    return classType;
+  }
 
-    public void setPrice(float price) {
-        this.price = price;
-    }
+  public void setClassType(String classType) {
+    this.classType = classType;
+  }
 
-    public String getCurrency() {
-        return currency;
-    }
+  public float getPrice() {
+    return price;
+  }
 
-    public void setCurrency(String currency) {
-        this.currency = currency;
-    }
+  public void setPrice(float price) {
+    this.price = price;
+  }
+
+  public String getCurrency() {
+    return currency;
+  }
+
+  public void setCurrency(String currency) {
+    this.currency = currency;
+  }
 }

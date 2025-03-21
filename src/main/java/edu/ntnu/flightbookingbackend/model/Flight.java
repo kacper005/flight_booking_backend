@@ -1,5 +1,7 @@
 package edu.ntnu.flightbookingbackend.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import edu.ntnu.flightbookingbackend.enums.FlightStatus;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
@@ -18,7 +20,7 @@ public class Flight {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Schema(description = "Unique identifier for the flight.", example = "1")
-  private int flightId;
+  private Integer flightId;
 
   @ManyToOne
   @JoinColumn(name = "airline_id", nullable = false)
@@ -48,22 +50,28 @@ public class Flight {
   @Schema(description = "Current status of the flight.", example = "Scheduled,Delayed,Cancelled")
   private FlightStatus status;
 
-  @ManyToOne
-  @JoinColumn(name = "bookingId")
-  private Booking booking;
+  @ManyToMany(mappedBy = "flights")
+  @JsonIgnore // Prevent infinite loop
+  private List<Booking> bookings = new ArrayList<>();
 
-  @OneToMany(mappedBy = "flight")
-  private List<Price> priceList = new ArrayList<>();
+  @ManyToMany
+  @JoinTable(
+      name = "flight_price",
+      joinColumns = @JoinColumn(name = "flight_id"),
+      inverseJoinColumns = @JoinColumn(name = "price_id")
+  )
+  @JsonManagedReference
+  private List<Price> prices = new ArrayList<>();
 
 
   public Flight() {
   }
 
-  public int getFlightId() {
+  public Integer getFlightId() {
     return flightId;
   }
 
-  public void setFlightId(int flightId) {
+  public void setFlightId(Integer flightId) {
     this.flightId = flightId;
   }
 
@@ -123,20 +131,39 @@ public class Flight {
     this.status = status;
   }
 
-  public Booking getBooking() {
-    return booking;
+  public List<Booking> getBookings() {
+    return bookings;
   }
 
-  public void setBooking(Booking booking) {
-    this.booking = booking;
+  public void setBookings(List<Booking> booking) {
+    this.bookings = booking;
   }
 
-  public List<Price> getPriceList() {
-    return priceList;
+  public void addBooking(Booking booking) {
+    this.bookings.add(booking);
+    booking.getFlights().add(this);
   }
 
-  public void setPriceList(List<Price> priceList) {
-    this.priceList = priceList;
+  public void removeBooking(Booking booking) {
+    this.bookings.remove(booking);
+    booking.getFlights().remove(this);
   }
 
+  public List<Price> getPrices() {
+    return prices;
+  }
+
+  public void setPrices(List<Price> priceList) {
+    this.prices = priceList;
+  }
+
+  public void addPrice(Price price) {
+    this.prices.add(price);
+    price.getFlights().add(this);
+  }
+
+  public void removePrice(Price price) {
+    this.prices.remove(price);
+    price.getFlights().remove(this);
+  }
 }

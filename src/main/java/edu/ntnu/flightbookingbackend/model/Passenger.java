@@ -1,6 +1,7 @@
 package edu.ntnu.flightbookingbackend.model;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
@@ -16,18 +17,19 @@ public class Passenger {
   @Id
   @GeneratedValue
   @Schema(description = "The id of the passenger")
-  private int passengerId;
+  private Integer passengerId;
   @Schema(description = "The first name of the passenger")
   private String firstName;
   @Schema(description = "The last name of the passenger")
   private String lastName;
   @Schema(description = "The date of birth of the passenger")
   private String dateOfBirth;
+  @Column(unique = true, nullable = false)
   @Schema(description = "The passport number of the passenger")
   private String passportNumber;
 
   @ManyToOne
-  @JoinColumn(name = "bookingId")
+  @JoinColumn(name = "booking_id")
   private Booking booking;
 
   // TODO: Make sure that the passenger is connected to a booking with an existing booking id (frontend or backend logic)
@@ -35,11 +37,11 @@ public class Passenger {
   public Passenger() {
   }
 
-  public int getPassengerId() {
+  public Integer getPassengerId() {
     return passengerId;
   }
 
-  public void setPassengerId(int passengerId) {
+  public void setPassengerId(Integer passengerId) {
     this.passengerId = passengerId;
   }
 

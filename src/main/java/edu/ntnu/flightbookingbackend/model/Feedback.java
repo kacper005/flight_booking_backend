@@ -18,7 +18,7 @@ public class Feedback {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Schema(description = "The unique ID of the feedback")
-    private int feedbackId;
+    private Integer feedbackId;
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
@@ -39,11 +39,11 @@ public class Feedback {
     }
 
     // Getters and setters
-    public int getFeedbackId() {
+    public Integer getFeedbackId() {
         return feedbackId;
     }
 
-    public void setFeedbackId(int feedbackId) {
+    public void setFeedbackId(Integer feedbackId) {
         this.feedbackId = feedbackId;
     }
 

@@ -14,7 +14,7 @@ public class Airport {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Schema(description = "Unique identifier for the airport.", example = "1")
-  private int airportId;
+  private Integer airportId;
 
   @Schema(description = "Name of the airport.", example = "Gardermoen")
   private String name;
@@ -33,11 +33,11 @@ public class Airport {
   public Airport() {
   }
 
-  public int getAirportId() {
+  public Integer getAirportId() {
     return airportId;
   }
 
-  public void setAirportId(int airportId) {
+  public void setAirportId(Integer airportId) {
     this.airportId = airportId;
   }
 

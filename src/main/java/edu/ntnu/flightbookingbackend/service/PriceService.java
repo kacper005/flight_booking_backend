@@ -56,8 +56,10 @@ public class PriceService {
       // Check if the flight already exists in the database
       FlightService flightService = new FlightService();
       for (Flight f : flightService.getAll()) {
-        if (f.getFlightId() == price.getFlight().getFlightId()) {
-          flightExists = true;
+        for (Flight flightInPrice : price.getFlights()) {
+          if (f.getFlightId() == flightInPrice.getFlightId()) {
+            flightExists = true;
+          }
         }
       }
 
@@ -88,7 +90,7 @@ public class PriceService {
    * Update a price in the application state (persist in the database).
    *
    * @param priceId ID of the price to update
-   * @param price Price to update
+   * @param price   Price to update
    * @return null on success, error message on error
    */
   @Operation(summary = "Update a price",
@@ -103,10 +105,13 @@ public class PriceService {
       errorMessage = "No price provided";
     } else if (price.getPriceId() != priceId) {
       errorMessage = "Price ID does no match the ID in JSON data (response body)";
-    } else if (flightService.findByID(price.getFlight().getFlightId()) == null) {
-      errorMessage = "Flight with ID " + price.getFlight().getFlightId() + " does not exist.";
     }
 
+    for (Flight f : price.getFlights()) {
+      if (flightService.findByID(f.getFlightId()) == null) {
+        errorMessage = "Flight with ID " + f.getFlightId() + " does not exist.";
+      }
+    }
 
     if (errorMessage == null) {
       priceRepository.save(price);
