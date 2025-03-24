@@ -87,6 +87,16 @@ public class UserService {
   }
 
   /**
+   * Check if a user exists in the database.
+   *
+   * @param userId ID of the user to check
+   * @return {@code true} if the user exists, {@code false} otherwise
+   */
+  public boolean userExists(Integer userId) {
+    return userRepository.existsById(userId);
+  }
+
+  /**
    * Update a user in the application state (persist in the database).
    *
    * @param userId ID of the user to update
