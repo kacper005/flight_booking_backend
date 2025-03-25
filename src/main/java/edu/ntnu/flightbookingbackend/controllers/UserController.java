@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -67,14 +68,9 @@ public class UserController {
   public ResponseEntity<String> add(@RequestBody User user) {
     ResponseEntity<String> response;
 
-    logger.info("The ID of the user is: " + user.getUserId());
-
     try {
       userService.add(user);
-      logger.info("Adding user: " + user.getUserId() + " " + user.getEmail() + " " +
-          user.getPhone() + " " + user.getFirstName() + " " + user.getLastName() + " " +
-          user.getDateOfBirth() + " " + user.getCountry() + " " + user.getGender() + " " +
-          user.getRole() + " " + user.getCreatedAt());
+      logger.info("User added.");
       response = new ResponseEntity<>(HttpStatus.CREATED);
     } catch (Exception e) {
       response = new ResponseEntity<>("Failed to add user: " + e.getMessage(),
@@ -106,6 +102,43 @@ public class UserController {
     } else {
         response = new ResponseEntity<>(HttpStatus.NOT_FOUND);
       }
+    return response;
+  }
+
+  /**
+   * Deletes all users from the application state.
+   *
+   * @return 200 OK on success, 400 Bad request on error
+   */
+  @DeleteMapping("/all")
+  public ResponseEntity<String> deleteAll() {
+    ResponseEntity<String> response;
+    try {
+        userService.removeAll();
+        response = new ResponseEntity<>(HttpStatus.OK);
+        } catch (Exception e) {
+        response = new ResponseEntity<>("Failed to remove all users: " + e.getMessage(),
+            HttpStatus.BAD_REQUEST);
+    }
+    return response;
+  }
+
+  /**
+   * Update a user in the application state.
+   *
+   * @param id ID of the user to update
+   * @param user User data to update
+   * @return 200 OK on success, 400 Bad request on error
+   */
+  @PutMapping("/{id}")
+  public ResponseEntity<String> update(@PathVariable Integer id, @RequestBody User user) {
+    ResponseEntity<String> response;
+    String errorMessage = userService.update(id, user);
+    if (errorMessage == null) {
+      response = new ResponseEntity<>(HttpStatus.OK);
+    } else {
+      response = new ResponseEntity<>(errorMessage, HttpStatus.BAD_REQUEST);
+    }
     return response;
   }
 

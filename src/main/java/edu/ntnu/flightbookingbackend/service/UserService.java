@@ -76,12 +76,21 @@ public class UserService {
    * database
    */
   @Operation(summary = "Remove a user", description = "Remove a user from the application state")
-  public boolean remove(int userID) {
+  public boolean remove(Integer userID) {
     Optional<User> user = userRepository.findById(userID);
     if (user.isPresent()) {
       userRepository.delete(user.get());
     }
     return user.isPresent();
+  }
+
+  /**
+   * Removes all users from the application state (database).
+   */
+  @Operation(summary = "Removes all users",
+      description = "Removes all users from the application state")
+  public void removeAll() {
+    userRepository.deleteAll();
   }
 
   /**
@@ -103,7 +112,7 @@ public class UserService {
    */
   @Operation(summary = "Update a user",
       description = "Update the details of a user in the application state")
-  public String update(int userId, User user) {
+  public String update(Integer userId, User user) {
     String errorMessage = null;
     User existingUser = findByID(userId);
     if (existingUser == null) {
