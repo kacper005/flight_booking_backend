@@ -1,8 +1,7 @@
 package edu.ntnu.flightbookingbackend.controllers;
 
-import edu.ntnu.flightbookingbackend.model.User;
-import edu.ntnu.flightbookingbackend.service.UserService;
-import io.swagger.v3.oas.annotations.Operation;
+import edu.ntnu.flightbookingbackend.model.Airline;
+import edu.ntnu.flightbookingbackend.service.AirlineService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,83 +17,80 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
- * REST API controller for the User entity.
+ * REST API controller for the Airline entity.
  */
 @RestController
-@RequestMapping("/users")
-public class UserController {
-  private static Logger logger = LoggerFactory.getLogger(UserController.class);
+@RequestMapping("/airlines")
+public class AirlineController {
+  private static Logger logger = LoggerFactory.getLogger(AirlineController.class);
 
   @Autowired
-  private UserService userService;
+  private AirlineService airlineService;
 
   /**
-   * Get all users.
+   * Get all airlines.
    *
-   * @return List of all users currently stored in the application state
+   * @return List of all airlines currently stored in the application state
    */
   @GetMapping
-  public Iterable<User> getAll() {
-    return userService.getAll();
+  public Iterable<Airline> getAll() {
+    return airlineService.getAll();
   }
 
   /**
-   * Get a specific user by ID.
+   * Get a specific airline by ID.
    *
-   * @param id ID of the user to be returned
-   * @return User with the given ID or status 404
+   * @param id ID of the airline to be returned
+   * @return Airline with the given ID or status 404
    */
   @GetMapping("/{id}")
-  public ResponseEntity<User> getUserById(@PathVariable Integer id) {
-    ResponseEntity<User> response;
-    User user = userService.findByID(id);
+  public ResponseEntity<Airline> getAirlineById(@PathVariable Integer id) {
+    ResponseEntity<Airline> response;
+    Airline airline = airlineService.findByID(id);
 
-    if (user != null) {
-      response = new ResponseEntity<>(user, HttpStatus.OK);
+    if (airline != null) {
+      response = new ResponseEntity<>(airline, HttpStatus.OK);
     } else {
       response = new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
-
     return response;
   }
 
   /**
-   * Add a new user to the application state.
+   * Add a new airline to the application state.
    *
-   * @param user User to add
+   * @param airline Airline to add
    * @return Status code 201 if successful, 400 if failed
    */
   @PostMapping()
-  public ResponseEntity<String> add(@RequestBody User user) {
+  public ResponseEntity<String> add(@RequestBody Airline airline) {
     ResponseEntity<String> response;
 
     try {
-      userService.add(user);
-      logger.info("User added.");
+      airlineService.add(airline);
+      logger.info("Airline added.");
       response = new ResponseEntity<>(HttpStatus.CREATED);
     } catch (Exception e) {
-      response = new ResponseEntity<>("Failed to add user: " + e.getMessage(),
+      response = new ResponseEntity<>("Failed to add airline: " + e.getMessage(),
           HttpStatus.BAD_REQUEST);
-      logger.error("Failed to add user: " + user.getUserId() + " " + user.getEmail() + " " +
-          user.getPhone() + " " + user.getFirstName() + " " + user.getLastName() + " " +
-          user.getDateOfBirth() + " " + user.getCountry() + " " + user.getGender() + " " +
-          user.getRole() + " " + user.getCreatedAt());
+      logger.error("Failed to add airline: " + airline.getAirlineId() + " " + airline.getName() +
+          " " + airline.getCode() + " " + airline.getCountry());
     }
     return response;
   }
 
   /**
-   * Delete a user from the application state.
+   * Delete an airline from the application state.
    *
-   * @param id ID of the user to delete
+   * @param id ID of the airline to delete
    * @return 200 OK on success, 400 Bad request or 404 Not found on error
    */
   @DeleteMapping("/{id}")
   public ResponseEntity<String> delete(@PathVariable Integer id) {
     ResponseEntity<String> response;
 
-    if (userService.userExists(id)) {
-      if (userService.remove(id)) {
+    if (airlineService.airlineExists(id)) {
+      if (airlineService.remove(id)) {
         response = new ResponseEntity<>(HttpStatus.OK);
       } else {
         response = new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -106,34 +102,28 @@ public class UserController {
   }
 
   /**
-   * Deletes all users from the application state.
+   * Delete all airlines from the application state.
    *
    * @return 200 OK on success, 400 Bad request on error
    */
   @DeleteMapping("/all")
   public ResponseEntity<String> deleteAll() {
     ResponseEntity<String> response;
+
     try {
-      userService.removeAll();
+      airlineService.removeAll();
       response = new ResponseEntity<>(HttpStatus.OK);
     } catch (Exception e) {
-      response = new ResponseEntity<>("Failed to remove all users: " + e.getMessage(),
+      response = new ResponseEntity<>("Failed to remove all airlines: " + e.getMessage(),
           HttpStatus.BAD_REQUEST);
     }
     return response;
   }
 
-  /**
-   * Update a user in the application state.
-   *
-   * @param id   ID of the user to update
-   * @param user User data to update
-   * @return 200 OK on success, 400 Bad request on error
-   */
   @PutMapping("/{id}")
-  public ResponseEntity<String> update(@PathVariable Integer id, @RequestBody User user) {
+  public ResponseEntity<String> update(@PathVariable Integer id, @RequestBody Airline airline) {
     ResponseEntity<String> response;
-    String errorMessage = userService.update(id, user);
+    String errorMessage = airlineService.update(id, airline);
     if (errorMessage == null) {
       response = new ResponseEntity<>(HttpStatus.OK);
     } else {
@@ -141,5 +131,4 @@ public class UserController {
     }
     return response;
   }
-
 }
