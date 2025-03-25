@@ -47,6 +47,9 @@ public class Flight {
   @Schema(description = "Scheduled arrival time of the flight.", example = "2025-06-15T18:45:00")
   private LocalDateTime arrivalTime;
 
+  @Schema(description = "Whether the flight is a round trip or not.", example = "true")
+  private boolean roundTrip;
+
   @Enumerated(EnumType.STRING)
   @Schema(description = "Current status of the flight.", example = "Scheduled,Delayed,Cancelled")
   private FlightStatus status;
@@ -122,6 +125,14 @@ public class Flight {
 
   public void setArrivalTime(LocalDateTime arrivalTime) {
     this.arrivalTime = arrivalTime;
+  }
+
+  public boolean getRoundTrip() {
+    return roundTrip;
+  }
+
+  public void setRoundTrip(boolean roundTrip) {
+    this.roundTrip = roundTrip;
   }
 
   public FlightStatus getStatus() {
