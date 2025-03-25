@@ -32,6 +32,8 @@ public class Price {
   private String classType;
   @Schema(description = "The price of the flight")
   private float price;
+  @Schema(description = "The name of the price provider")
+  private String priceProviderName;
   @Schema(description = "The currency of the price")
   private String currency;
 
@@ -78,6 +80,14 @@ public class Price {
 
   public void setPrice(float price) {
     this.price = price;
+  }
+
+  public String getPriceProviderName() {
+    return priceProviderName;
+  }
+
+  public void setPriceProviderName(String priceProviderName) {
+    this.priceProviderName = priceProviderName;
   }
 
   public String getCurrency() {
