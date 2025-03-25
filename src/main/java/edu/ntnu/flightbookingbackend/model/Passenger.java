@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
@@ -15,8 +16,9 @@ import jakarta.persistence.ManyToOne;
 @Schema(description = "A passenger connected to a booking")
 public class Passenger {
   @Id
-  @GeneratedValue
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Schema(description = "The id of the passenger")
+  @Column(name = "passenger_id")
   private Integer passengerId;
   @Schema(description = "The first name of the passenger")
   private String firstName;

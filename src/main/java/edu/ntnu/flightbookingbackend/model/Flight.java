@@ -19,6 +19,7 @@ public class Flight {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Column(name = "flight_id")
   @Schema(description = "Unique identifier for the flight.", example = "1")
   private Integer flightId;
 

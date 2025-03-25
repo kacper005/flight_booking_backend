@@ -9,6 +9,7 @@ public class Airline {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Column(name = "airline_id")
   @Schema(description = "Unique identifier for the airline.", example = "1")
   private Integer airlineId;
 

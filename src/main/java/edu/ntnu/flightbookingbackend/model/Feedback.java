@@ -17,6 +17,7 @@ import jakarta.persistence.GenerationType;
 public class Feedback {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "feedback_id")
     @Schema(description = "The unique ID of the feedback")
     private Integer feedbackId;
 

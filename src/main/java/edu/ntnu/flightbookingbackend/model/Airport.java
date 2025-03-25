@@ -13,6 +13,7 @@ public class Airport {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Column(name = "airport_id")
   @Schema(description = "Unique identifier for the airport.", example = "1")
   private Integer airportId;
 

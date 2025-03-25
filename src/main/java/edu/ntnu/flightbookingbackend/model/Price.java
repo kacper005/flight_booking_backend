@@ -2,8 +2,10 @@ package edu.ntnu.flightbookingbackend.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToMany;
@@ -17,7 +19,8 @@ import java.util.List;
 @Schema(description = "A price for a flight, with class and currency")
 public class Price {
   @Id
-  @GeneratedValue
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Column(name = "price_id")
   @Schema(description = "The id of the price")
   private Integer priceId;
 
