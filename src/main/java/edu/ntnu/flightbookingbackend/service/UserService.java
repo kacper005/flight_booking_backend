@@ -52,8 +52,6 @@ public class UserService {
     boolean emailExists = false;
 
     if (user != null) {
-      User existingUser = findByID(user.getUserId());
-
       // Check if the email already exists in the database
       for (User u : userRepository.findAll()) {
         if (u.getEmail().equals(user.getEmail())) {
@@ -62,7 +60,7 @@ public class UserService {
       }
 
       // Add the user if it does not already exist in the database
-      if (existingUser == null && !emailExists) {
+      if (!emailExists) {
         userRepository.save(user);
         added = true;
       }

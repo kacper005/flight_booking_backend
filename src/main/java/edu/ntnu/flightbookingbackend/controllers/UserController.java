@@ -67,17 +67,22 @@ public class UserController {
   public ResponseEntity<String> add(@RequestBody User user) {
     ResponseEntity<String> response;
 
+    logger.info("The ID of the user is: " + user.getUserId());
+
     try {
+      userService.add(user);
       logger.info("Adding user: " + user.getUserId() + " " + user.getEmail() + " " +
           user.getPhone() + " " + user.getFirstName() + " " + user.getLastName() + " " +
           user.getDateOfBirth() + " " + user.getCountry() + " " + user.getGender() + " " +
           user.getRole() + " " + user.getCreatedAt());
-      userService.add(user);
       response = new ResponseEntity<>(HttpStatus.CREATED);
     } catch (Exception e) {
       response = new ResponseEntity<>("Failed to add user: " + e.getMessage(),
           HttpStatus.BAD_REQUEST);
-
+      logger.info("Failed to add user: " + user.getUserId() + " " + user.getEmail() + " " +
+          user.getPhone() + " " + user.getFirstName() + " " + user.getLastName() + " " +
+          user.getDateOfBirth() + " " + user.getCountry() + " " + user.getGender() + " " +
+          user.getRole() + " " + user.getCreatedAt());
     }
     return response;
   }
