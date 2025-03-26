@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -56,6 +57,13 @@ public class AirportController {
     return response;
   }
 
+  /**
+   * Add an airport to the application state.
+   *
+   * @param airport Airport to add
+   * @return 201 Created on success, 400 Bad request on error
+   */
+  @PostMapping()
   public ResponseEntity<String> add(@RequestBody Airport airport) {
     ResponseEntity<String> response;
 
