@@ -34,6 +34,10 @@ public class UserController {
    * @return List of all users currently stored in the application state
    */
   @GetMapping
+  @Operation(
+      summary = "Get all users",
+      description = "Returns a list of all users currently stored in the application state"
+  )
   public Iterable<User> getAll() {
     return userService.getAll();
   }
@@ -45,6 +49,10 @@ public class UserController {
    * @return User with the given ID or status 404
    */
   @GetMapping("/{id}")
+  @Operation(
+      summary = "Get user by ID",
+      description = "Fetches a user based on the provided ID"
+  )
   public ResponseEntity<User> getUserById(@PathVariable Integer id) {
     ResponseEntity<User> response;
     User user = userService.findByID(id);
@@ -65,6 +73,10 @@ public class UserController {
    * @return Status code 201 if successful, 400 if failed
    */
   @PostMapping()
+  @Operation(
+      summary = "Add a new user",
+      description = "Add a new user to the application state"
+  )
   public ResponseEntity<String> add(@RequestBody User user) {
     ResponseEntity<String> response;
 
@@ -90,6 +102,10 @@ public class UserController {
    * @return 200 OK on success, 400 Bad request or 404 Not found on error
    */
   @DeleteMapping("/{id}")
+  @Operation(
+      summary = "Delete a user",
+      description = "Delete a user with a given ID from the application state"
+  )
   public ResponseEntity<String> delete(@PathVariable Integer id) {
     ResponseEntity<String> response;
 
@@ -111,6 +127,10 @@ public class UserController {
    * @return 200 OK on success, 400 Bad request on error
    */
   @DeleteMapping("/all")
+  @Operation(
+      summary = "Delete all users",
+      description = "Delete all users from the application state"
+  )
   public ResponseEntity<String> deleteAll() {
     ResponseEntity<String> response;
     try {
@@ -131,6 +151,10 @@ public class UserController {
    * @return 200 OK on success, 400 Bad request on error
    */
   @PutMapping("/{id}")
+  @Operation(
+      summary = "Update a user",
+      description = "Update the details of a user in the application state"
+  )
   public ResponseEntity<String> update(@PathVariable Integer id, @RequestBody User user) {
     ResponseEntity<String> response;
     String errorMessage = userService.update(id, user);

@@ -2,6 +2,7 @@ package edu.ntnu.flightbookingbackend.controllers;
 
 import edu.ntnu.flightbookingbackend.model.Airport;
 import edu.ntnu.flightbookingbackend.service.AirportService;
+import io.swagger.v3.oas.annotations.Operation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +34,10 @@ public class AirportController {
    * @return List of all airports currently stored in the application state
    */
   @GetMapping
+  @Operation(
+      summary = "Get all airports",
+      description = "Returns a list of all airports currently stored in the application state"
+  )
   public Iterable<Airport> getAll() {
     return airportService.getAll();
   }
@@ -44,6 +49,10 @@ public class AirportController {
    * @return Airport with the given ID or status 404
    */
   @GetMapping("/{id}")
+  @Operation(
+      summary = "Get airport by ID",
+      description = "Fetches an airport based on the provided ID"
+  )
   public ResponseEntity<Airport> getAirportById(@PathVariable Integer id) {
     ResponseEntity<Airport> response;
     Airport airport = airportService.findByID(id);
@@ -64,6 +73,10 @@ public class AirportController {
    * @return 201 Created on success, 400 Bad request on error
    */
   @PostMapping()
+  @Operation(
+      summary = "Add a new airport",
+      description = "Add a new airport to the application state"
+  )
   public ResponseEntity<String> add(@RequestBody Airport airport) {
     ResponseEntity<String> response;
 
@@ -87,6 +100,10 @@ public class AirportController {
    * @return 200 OK on success, 400 Bad request or 404 Not found on error
    */
   @DeleteMapping("/{id}")
+  @Operation(
+      summary = "Delete an airport",
+      description = "Delete an airport with a given ID from the application state"
+  )
   public ResponseEntity<String> delete(@PathVariable Integer id) {
     ResponseEntity<String> response;
 
@@ -108,6 +125,10 @@ public class AirportController {
    * @return 200 OK on success, 400 Bad request on error
    */
   @DeleteMapping("/all")
+  @Operation(
+      summary = "Delete all airports",
+      description = "Delete all airports from the application state"
+  )
   public ResponseEntity<String> deleteAll() {
     ResponseEntity<String> response;
     try {
@@ -123,11 +144,15 @@ public class AirportController {
   /**
    * Update an airport in the application state.
    *
-   * @param id ID of the airport to update
+   * @param id      ID of the airport to update
    * @param airport Airport data to update
    * @return 200 OK on success, 400 Bad request on error
    */
   @PutMapping("/{id}")
+  @Operation(
+      summary = "Update an airport",
+      description = "Update the details of an airport in the application state"
+  )
   public ResponseEntity<String> update(@PathVariable Integer id, @RequestBody Airport airport) {
     ResponseEntity<String> response;
     String errorMessage = airportService.update(id, airport);

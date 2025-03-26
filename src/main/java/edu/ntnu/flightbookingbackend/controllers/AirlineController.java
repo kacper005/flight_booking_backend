@@ -2,6 +2,7 @@ package edu.ntnu.flightbookingbackend.controllers;
 
 import edu.ntnu.flightbookingbackend.model.Airline;
 import edu.ntnu.flightbookingbackend.service.AirlineService;
+import io.swagger.v3.oas.annotations.Operation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +34,10 @@ public class AirlineController {
    * @return List of all airlines currently stored in the application state
    */
   @GetMapping
+  @Operation(
+      summary = "Get all airlines",
+      description = "Returns a list of all airlines currently stored in the application state"
+  )
   public Iterable<Airline> getAll() {
     return airlineService.getAll();
   }
@@ -44,6 +49,10 @@ public class AirlineController {
    * @return Airline with the given ID or status 404
    */
   @GetMapping("/{id}")
+  @Operation(
+      summary = "Get airline by ID",
+      description = "Fetches an airline based on the provided ID"
+  )
   public ResponseEntity<Airline> getAirlineById(@PathVariable Integer id) {
     ResponseEntity<Airline> response;
     Airline airline = airlineService.findByID(id);
@@ -63,6 +72,10 @@ public class AirlineController {
    * @return Status code 201 if successful, 400 if failed
    */
   @PostMapping()
+  @Operation(
+      summary = "Add a new airline",
+      description = "Add a new airline to the application state"
+  )
   public ResponseEntity<String> add(@RequestBody Airline airline) {
     ResponseEntity<String> response;
 
@@ -86,6 +99,10 @@ public class AirlineController {
    * @return 200 OK on success, 400 Bad request or 404 Not found on error
    */
   @DeleteMapping("/{id}")
+  @Operation(
+      summary = "Delete an airline",
+      description = "Delete an airline with a given ID from the application state"
+  )
   public ResponseEntity<String> delete(@PathVariable Integer id) {
     ResponseEntity<String> response;
 
@@ -107,6 +124,10 @@ public class AirlineController {
    * @return 200 OK on success, 400 Bad request on error
    */
   @DeleteMapping("/all")
+  @Operation(
+      summary = "Delete all airlines",
+      description = "Delete all airlines from the application state"
+  )
   public ResponseEntity<String> deleteAll() {
     ResponseEntity<String> response;
 
@@ -121,6 +142,10 @@ public class AirlineController {
   }
 
   @PutMapping("/{id}")
+  @Operation(
+      summary = "Update an airline",
+      description = "Update the details of an airline in the application state"
+  )
   public ResponseEntity<String> update(@PathVariable Integer id, @RequestBody Airline airline) {
     ResponseEntity<String> response;
     String errorMessage = airlineService.update(id, airline);
