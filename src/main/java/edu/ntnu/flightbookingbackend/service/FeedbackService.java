@@ -50,25 +50,27 @@ public class FeedbackService {
     }
 
     /**
-     * Retrieves feedback by user ID
+     * Retrieves all feedback entries for a given user.
      *
      * @param userId The ID of the user.
      * @return A list of feedback submitted by the user.
      */
-    @Operation(summary = "Find feedback by user ID", description = "Fetches all feedback submitted by a specific user.")
-    public Feedback findByUserId(int userId) {
-        Optional<Feedback> feedback = feedbackRepository.findById(userId);
-        return feedback.orElse(null);
+    @Operation(summary = "Get feedback by user ID", description = "Fetches all feedback entries for a specific user.")
+    public List<Feedback> findByUserId(int userId) {
+        List<Feedback> allFeedback = (List<Feedback>) feedbackRepository.findAll();
+        return allFeedback.stream()
+                .filter(f-> f.getUser() != null && f.getUser().getUserId() == userId)
+                .toList();
     }
 
     /**
-     * Saves a new feedback entry.
+     * Adds a new feedback entry.
      *
      * @param feedback The feedback entity to save.
      * @return The saved feedback entity or an error message if validation fails.
      */
     @Operation(summary = "Submit new feedback", description = "Users can submit feedback about the website.")
-    public String saveFeedback (Feedback feedback) {
+    public String addFeedback (Feedback feedback) {
         if (feedback == null) {
             return "Invalid feedback data.";
         }
@@ -145,4 +147,22 @@ public class FeedbackService {
     public long getFeedbackCount() {
         return feedbackRepository.count();
     }
+
+    /**
+     * Checks if a feedback entry exists by ID.
+     * @param id The ID of the feedback entry.
+     * @return {@code true} if the feedback exists, {@code false} otherwise.
+     */
+    public boolean feedbackExists(Integer id) {
+        return feedbackRepository.existsById(id);
+    }
+
+    /**
+     * Removes all feedback from the application state (database).
+     */
+    @Operation(summary = "Removes all feedback", description = "Deletes all feedback entries from the system.")
+    public void deleteAllFeedback() {
+        feedbackRepository.deleteAll();
+    }
+
 }
