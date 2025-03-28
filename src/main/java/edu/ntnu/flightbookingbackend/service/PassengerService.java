@@ -130,6 +130,25 @@ public class PassengerService {
   }
 
   /**
+   * Check if a passenger exists in the application state.
+   *
+   * @param passengerId ID of the passenger to check
+   * @return {@code true} if the passenger exists, {@code false} otherwise
+   */
+  public boolean passengerExists(int passengerId) {
+    return passengerRepository.existsById(passengerId);
+  }
+
+  /**
+   * Removes all passengers from the application state (database).
+   */
+  @Operation(summary = "Removes all bookings",
+      description = "Removes all passengers from the application state")
+  public void removeAll() {
+    passengerRepository.deleteAll();
+  }
+
+  /**
    * Get the number of passengers in the application state.
    *
    * @return The total number of passengers stored in the database

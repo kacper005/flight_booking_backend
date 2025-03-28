@@ -71,6 +71,30 @@ public class FlightService {
     }
 
     /**
+     * Update a flight in the application state (update in the database).
+     *
+     * @param flightId ID of the flight to update
+     * @param flight Flight data to update
+     * @return Success message or error message on failure
+     */
+    @Operation(summary = "Update a flight", description = "Update a flight in the application state")
+    public String update(int flightId, Flight flight) {
+        if (flight == null) {
+            return "No flight data provided.";
+        }
+
+        Flight existingFlight = findByID(flightId);
+        if (existingFlight == null) {
+            return "No flight with id " + flightId + " found.";
+        }
+
+        flight.setFlightId(flightId);
+        flightRepository.save(flight);
+        return "Flight updated successfully.";
+    }
+
+
+    /**
      * Remove a flight from the application state (delete from the database).
      *
      * @param flightId ID of the flight to remove
@@ -87,5 +111,24 @@ public class FlightService {
         }
 
         return removed;
+    }
+
+    /**
+     * Removes all flights from the application state.
+     */
+    @Operation(summary = "Remove all flights",
+        description = "Remove all flights from the application state")
+    public void removeAll() {
+        flightRepository.deleteAll();
+    }
+
+    /**
+     * Check if a flight exists in the application state.
+     *
+     * @param flightId ID of the flight to check
+     * @return {@code true} if the flight exists, {@code false} otherwise
+     */
+    public boolean flightExists(int flightId) {
+        return flightRepository.existsById(flightId);
     }
 }

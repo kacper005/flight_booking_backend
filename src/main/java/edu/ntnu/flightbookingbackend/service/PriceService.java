@@ -120,6 +120,25 @@ public class PriceService {
   }
 
   /**
+   * Check if a price exists in the application state.
+   *
+   * @param priceId ID of the price to check
+   * @return {@code true} if the price exists, {@code false} otherwise
+   */
+  public boolean priceExists(int priceId) {
+    return priceRepository.existsById(priceId);
+  }
+
+  /**
+   * Removes all prices from the application state.
+   */
+  @Operation(summary = "Remove all prices",
+      description = "Remove all prices from the application state")
+  public void removeAll() {
+    priceRepository.deleteAll();
+  }
+
+  /**
    * Get the number of different prices in the database.
    *
    * @return The number of different prices in the database

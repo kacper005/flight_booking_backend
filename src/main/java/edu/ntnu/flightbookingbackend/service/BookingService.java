@@ -102,26 +102,31 @@ public class BookingService {
   @Operation(summary = "Update a booking",
       description = "Update the details of a booking in the application state")
   public String update(int bookingId, Booking booking) {
-    String errorMessage = null;
+    if (booking == null) {
+      return "No booking data provided.";
+    }
+
+    if (booking.getBookingId() != bookingId) {
+      return "Booking ID does not match the ID in JSON data (response body).";
+    }
+
     Booking existingBooking = findByID(bookingId);
-    UserService userService = new UserService();
-    FlightService flightService = new FlightService();
     if (existingBooking == null) {
-      errorMessage = "No booking with id " + bookingId + " found.";
-    } else if (booking == null) {
-      errorMessage = "No booking data provided.";
-    } else if (booking.getBookingId() != bookingId) {
-      errorMessage = "Booking ID does not match the ID in JSON data (response body).";
-    } else if (userService.findByID(booking.getUser().getUserId()) == null) {
-      errorMessage = "User with ID " + booking.getUser().getUserId() + " does not exist.";
+      return "No booking with id " + bookingId + " found.";
     }
 
-    // TODO: Check if flightId exists
-
-    if (errorMessage == null) {
-      bookingRepository.save(booking);
+    UserService userService = new UserService();
+    if (userService.findByID(booking.getUser().getUserId()) == null) {
+      return "User with ID " + booking.getUser().getUserId() + " does not exist.";
     }
-    return errorMessage;
+
+    FlightService flightService = new FlightService();
+    if (flightService.findByID(booking.getFlight().getFlightId()) == null) {
+      return "Flight with ID " + booking.getFlight().getFlightId() + " does not exist.";
+    }
+
+    bookingRepository.save(booking);
+    return null;
   }
 
   /**
@@ -134,4 +139,27 @@ public class BookingService {
   public long getCount() {
     return bookingRepository.count();
   }
+
+
+    /**
+     * Check if a booking exists in the database.
+     *
+     * @param bookingId ID of the booking to check
+     * @return {@code true} if the booking exists, {@code false} otherwise
+     */
+  public boolean bookingExists(int bookingId) {
+    return bookingRepository.existsById(bookingId);
+  }
+
+  /**
+   * Removes all bookings from the application state (database).
+   */
+  @Operation(summary = "Removes all bookings",
+      description = "Removes all bookings from the application state")
+  public void removeAll() {
+    bookingRepository.deleteAll();
+  }
+
 }
+
+

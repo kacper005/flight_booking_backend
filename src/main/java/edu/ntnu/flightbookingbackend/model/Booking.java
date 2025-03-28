@@ -90,6 +90,10 @@ public class Booking {
     this.flights = flights;
   }
 
+  public Flight getFlight() {
+    return flights.isEmpty() ? null : flights.get(0);
+  }
+
   public void addFlight(Flight flight) {
     this.flights.add(flight);
     flight.getBookings().add(this);
