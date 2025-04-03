@@ -1,9 +1,10 @@
 package edu.ntnu.flightbookingbackend.service;
 
 import edu.ntnu.flightbookingbackend.model.Feedback;
-import edu.ntnu.flightbookingbackend.model.Passenger;
+import edu.ntnu.flightbookingbackend.model.User;
 import edu.ntnu.flightbookingbackend.repository.FeedbackRepository;
 import edu.ntnu.flightbookingbackend.repository.PassengerRepository;
+import edu.ntnu.flightbookingbackend.repository.UserRepository;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,12 +21,12 @@ import java.util.Optional;
 @Tag(name = "Feedback Service", description = "Business logic related to user feedback")
 public class FeedbackService {
     private final FeedbackRepository feedbackRepository;
-    private final PassengerRepository passengerRepository;
+    private final UserRepository userRepository;
 
     @Autowired
-    public FeedbackService(FeedbackRepository feedbackRepository, PassengerRepository passengerRepository) {
+    public FeedbackService(FeedbackRepository feedbackRepository, UserRepository userRepository) {
         this.feedbackRepository = feedbackRepository;
-        this.passengerRepository = passengerRepository;
+        this.userRepository = userRepository;
     }
 
     /**
@@ -75,7 +76,7 @@ public class FeedbackService {
             return "Invalid feedback data.";
         }
 
-        Optional<Passenger> user = passengerRepository.findById(feedback.getUser().getUserId());
+        Optional<User> user = userRepository.findById(feedback.getUser().getUserId());
         if (user.isEmpty()) {
             return "User not found.";
         }
@@ -83,6 +84,7 @@ public class FeedbackService {
         if (feedback.getRating() < 1 || feedback.getRating() > 5) {
             return "Rating must be between 1 and 5.";
         }
+
 
         feedback.setCreatedAt(LocalDateTime.now().toString());
         feedbackRepository.save(feedback);
