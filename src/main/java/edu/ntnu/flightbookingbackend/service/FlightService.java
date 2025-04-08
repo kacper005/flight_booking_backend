@@ -1,10 +1,14 @@
 package edu.ntnu.flightbookingbackend.service;
 
 import edu.ntnu.flightbookingbackend.model.Flight;
+import edu.ntnu.flightbookingbackend.model.Price;
 import edu.ntnu.flightbookingbackend.repository.FlightRepository;
+import edu.ntnu.flightbookingbackend.repository.PriceRepository;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.transaction.Transactional;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,6 +23,9 @@ import org.springframework.stereotype.Service;
 public class FlightService {
     @Autowired
     private FlightRepository flightRepository;
+
+    @Autowired
+    private PriceRepository priceRepository;
 
     /**
      * Get all flights from the application state.
@@ -50,25 +57,50 @@ public class FlightService {
      */
     @Operation(summary = "Add a new flight", description = "Add a new flight to the application state")
     public boolean add(Flight flight) {
-        boolean added = false;
-        boolean flightExists = false;
-
-        if (flight != null) {
-        Flight existingFlight = findByID(flight.getFlightId());
-
-        for (Flight f : flightRepository.findAll()) {
-            if (f.getFlightId() == flight.getFlightId()) {
-            flightExists = true;
-            }
+        if (flight == null) {
+            return false;
         }
 
-        if (!flightExists) {
-            flightRepository.save(flight);
-            added = true;
+        if (flight.getFlightId() != null && flightRepository.existsById(flight.getFlightId())) {
+            return false;
         }
+
+        if (flight.getPrices() == null) {
+            flight.setPrices(new ArrayList<>());
         }
-        return added;
+
+        flightRepository.save(flight);
+        return true;
     }
+
+
+    /**
+     * Add prices to an existing flight.
+     *
+     * @param flightId ID of the flight
+     * @param prices List of prices to add
+     * @return {@code true} if prices were added, {@code false} if flight not found
+     */
+    @Transactional
+    @Operation(summary = "Add prices to flight", description = "Add prices to an existing flight")
+    public boolean addPricesToFlight(Integer flightId, List<Price> prices) {
+        Optional<Flight> optionalFlight = flightRepository.findById(flightId);
+        if (optionalFlight.isEmpty()) {
+            return false;
+        }
+
+        Flight flight = optionalFlight.get();
+
+        for (Price price : prices) {
+            Price savedPrice = priceRepository.save(price);
+            flight.addPrice(savedPrice);
+        }
+
+        flightRepository.save(flight);
+        return true;
+    }
+
+
 
     /**
      * Update a flight in the application state (update in the database).
@@ -79,18 +111,20 @@ public class FlightService {
      */
     @Operation(summary = "Update a flight", description = "Update a flight in the application state")
     public String update(int flightId, Flight flight) {
+        String errorMessage = null;
+
         if (flight == null) {
-            return "No flight data provided.";
+            errorMessage = "Flight cannot be null.";
         }
 
         Flight existingFlight = findByID(flightId);
         if (existingFlight == null) {
-            return "No flight with id " + flightId + " found.";
+            errorMessage = "Flight with ID " + flightId + " not found.";
         }
 
         flight.setFlightId(flightId);
         flightRepository.save(flight);
-        return "Flight updated successfully.";
+        return errorMessage;
     }
 
 

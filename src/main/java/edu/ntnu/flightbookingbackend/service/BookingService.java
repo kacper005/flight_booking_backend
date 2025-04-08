@@ -3,8 +3,12 @@ package edu.ntnu.flightbookingbackend.service;
 import edu.ntnu.flightbookingbackend.model.Booking;
 import edu.ntnu.flightbookingbackend.model.Flight;
 import edu.ntnu.flightbookingbackend.repository.BookingRepository;
+import edu.ntnu.flightbookingbackend.repository.FlightRepository;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.transaction.Transactional;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,6 +21,9 @@ import org.springframework.stereotype.Service;
 public class BookingService {
   @Autowired
   private BookingRepository bookingRepository;
+
+  @Autowired
+  private FlightRepository flightRepository;
 
   /**
    * Get all bookings from the application state.
@@ -48,48 +55,50 @@ public class BookingService {
    * @param booking Booking to persist
    * @return {@code true} when booking is added, {@code false} on error
    */
-  @Operation(summary = "Add a new booking",
-      description = "Add a new booking to the application state")
-  public boolean add(Booking booking) {
-    boolean added = false;
-    boolean userExists = false;
-    boolean flightExists = false;
-
-    if (booking != null) {
-      Booking existingBooking = findByID(booking.getBookingId());
-
-      // Check if the user already exists in the database
-      UserService userService = new UserService();
-      if (userService.findByID(booking.getUser().getUserId()) != null) {
-        userExists = true;
+    @Operation(summary = "Add a new booking",
+        description = "Add a new booking to the application state")
+    public boolean add(Booking booking) {
+      if (booking == null) {
+        return false;
       }
 
-      // TODO: Check if the flight already exists in the database
-
-      // Add the booking if it does not already exist in the database and the user and flight exist
-      if (existingBooking == null && userExists && flightExists) {
-        bookingRepository.save(booking);
-        added = true;
+      if (booking.getBookingId() != null && bookingRepository.existsById(booking.getBookingId())) {
+        return false;
       }
+
+      if (booking.getFlights() == null) {
+        booking.setFlights(new ArrayList<>());
+      }
+
+      bookingRepository.save(booking);
+      return true;
     }
-    return added;
-  }
 
   /**
-   * Remove a booking from the application state (database).
+   * Add flight to an existing booking.
    *
-   * @param bookingID ID of the booking to delete
-   * @return {@code true} when booking is deleted, {@code false} when booking was not found in the
-   * database
+   * @param bookingId ID of the booking
+   * @param flights List of flights to add
+   * @return {@code true} if flights were added, {@code false} if booking not found
    */
-  @Operation(summary = "Remove a booking",
-      description = "Remove a booking from the application state")
-  public boolean remove(int bookingID) {
-    Optional<Booking> booking = bookingRepository.findById(bookingID);
-    if (booking.isPresent()) {
-      bookingRepository.delete(booking.get());
+  @Transactional
+  public boolean addFlightsToBooking(int bookingId, List<Flight> flights) {
+    Optional<Booking> optionalBooking = bookingRepository.findById(bookingId);
+
+    if (optionalBooking.isPresent()) {
+      Booking booking = optionalBooking.get(); // This is now inside a Hibernate session
+
+      for (Flight flight : flights) {
+        if (flight.getFlightId() == null) {
+          flightRepository.save(flight);
+        }
+        booking.addFlight(flight);
+      }
+
+      bookingRepository.save(booking);
+      return true;
     }
-    return booking.isPresent();
+    return false;
   }
 
   /**
@@ -115,19 +124,33 @@ public class BookingService {
       return "No booking with id " + bookingId + " found.";
     }
 
-    UserService userService = new UserService();
-    if (userService.findByID(booking.getUser().getUserId()) == null) {
-      return "User with ID " + booking.getUser().getUserId() + " does not exist.";
+    if (booking.getBookingDate() != null) {
+      existingBooking.setBookingDate(booking.getBookingDate());
     }
 
-    FlightService flightService = new FlightService();
-    if (flightService.findByID(booking.getFlight().getFlightId()) == null) {
-      return "Flight with ID " + booking.getFlight().getFlightId() + " does not exist.";
-    }
-
-    bookingRepository.save(booking);
+    bookingRepository.save(existingBooking);
     return null;
   }
+
+
+
+  /**
+   * Remove a booking from the application state (database).
+   *
+   * @param bookingID ID of the booking to delete
+   * @return {@code true} when booking is deleted, {@code false} when booking was not found in the
+   * database
+   */
+  @Operation(summary = "Remove a booking",
+      description = "Remove a booking from the application state")
+  public boolean remove(int bookingID) {
+    Optional<Booking> booking = bookingRepository.findById(bookingID);
+    if (booking.isPresent()) {
+      bookingRepository.delete(booking.get());
+    }
+    return booking.isPresent();
+  }
+
 
   /**
    * Get the number of bookings in the database.

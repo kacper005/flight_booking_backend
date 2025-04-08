@@ -1,7 +1,6 @@
 package edu.ntnu.flightbookingbackend.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import edu.ntnu.flightbookingbackend.enums.FlightStatus;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
@@ -31,12 +30,12 @@ public class Flight {
   @Schema(description = "Flight number assigned by the airline.", example = "AA123")
   private String flightNumber;
 
-  @OneToOne
+  @ManyToOne
   @JoinColumn(name = "departure_airport_id", nullable = false)
   @Schema(description = "Airport from which the flight departs.")
   private Airport departureAirport;
 
-  @OneToOne
+  @ManyToOne
   @JoinColumn(name = "arrival_airport_id", nullable = false)
   @Schema(description = "Airport at which the flight arrives.")
   private Airport arrivalAirport;
@@ -50,22 +49,25 @@ public class Flight {
   @Schema(description = "Whether the flight is a round trip or not.", example = "true")
   private boolean roundTrip;
 
+  @Schema(description = "List of extra features available on the flight.", example = "[\"WiFi\", \"In-seat Power\", \"Extra Legroom\"]")
+  private String extraFeatures;
+
   @Enumerated(EnumType.STRING)
   @Schema(description = "Current status of the flight.", example = "Scheduled,Delayed,Cancelled")
   private FlightStatus status;
 
   @ManyToMany(mappedBy = "flights")
-  @JsonIgnore // Prevent infinite loop
+  @JsonIgnore
   private List<Booking> bookings = new ArrayList<>();
 
-  @ManyToMany
+  @ManyToMany(fetch = FetchType.EAGER)
   @JoinTable(
       name = "flight_price",
       joinColumns = @JoinColumn(name = "flight_id"),
       inverseJoinColumns = @JoinColumn(name = "price_id")
   )
-  @JsonManagedReference
   private List<Price> prices = new ArrayList<>();
+
 
 
   public Flight() {
@@ -133,6 +135,14 @@ public class Flight {
 
   public void setRoundTrip(boolean roundTrip) {
     this.roundTrip = roundTrip;
+  }
+
+  public String getExtraFeatures() {
+    return extraFeatures;
+  }
+
+  public void setExtraFeatures(String extraFeatures) {
+    this.extraFeatures = extraFeatures;
   }
 
   public FlightStatus getStatus() {

@@ -1,10 +1,10 @@
 package edu.ntnu.flightbookingbackend.controllers;
 
-import edu.ntnu.flightbookingbackend.model.Booking;
 import edu.ntnu.flightbookingbackend.model.Flight;
+import edu.ntnu.flightbookingbackend.model.Price;
 import edu.ntnu.flightbookingbackend.service.FlightService;
-
 import io.swagger.v3.oas.annotations.Operation;
+import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -83,22 +83,44 @@ public class FlightController {
         description = "Add a new flight to the application state"
     )
     public ResponseEntity<String> add(@RequestBody Flight flight) {
-      ResponseEntity<String> response;
-
-      try{
+      try {
         flightService.add(flight);
-        logger.info("Flight added.");
-        response = new ResponseEntity<>(HttpStatus.CREATED);
+        logger.info("Flight added with ID: " + flight.getFlightId());
+        return new ResponseEntity<>(HttpStatus.CREATED);
       } catch (Exception e) {
         logger.error("Failed to add flight: " + e.getMessage());
-        response = new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        logger.error("Failed to add flight");
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
       }
 
-
-      return response;
     }
 
+  /**
+   * Add prices to an existing flight.
+   *
+   * @param id ID of the flight to update
+   * @param prices List of prices to add
+   * @return Status 200 on success, 400 on error, 404 if flight not found
+   */
+  @PostMapping("/{id}/prices")
+  @Operation(
+      summary = "Add prices to a flight",
+      description = "Attach prices to an existing flight"
+  )
+  public ResponseEntity<String> addPricesToFlight(@PathVariable Integer id, @RequestBody
+  List<Price> prices) {
+    try {
+      boolean success = flightService.addPricesToFlight(id, prices);
+      if (success) {
+        logger.info("Prices added to flight ID: " + id);
+        return new ResponseEntity<>("Prices added successfully", HttpStatus.OK);
+      } else {
+        return new ResponseEntity<>("Flight not found", HttpStatus.NOT_FOUND);
+      }
+    } catch (Exception e) {
+      logger.error("Failed to add prices: " + e.getMessage());
+      return new ResponseEntity<>("Failed to add prices", HttpStatus.BAD_REQUEST);
+    }
+  }
 
   /**
    * Update a flight by ID.

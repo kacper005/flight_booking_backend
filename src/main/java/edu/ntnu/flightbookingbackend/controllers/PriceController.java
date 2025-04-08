@@ -80,29 +80,22 @@ public class PriceController {
    * @param price Price to be added
    * @return Status 201 if price was added, 400 if price already exists
    */
-  @PostMapping()
-    @Operation(
-        summary = "Add a new price",
-        description = "Add a new price to the application state"
-    )
-  public ResponseEntity<String> add(@RequestBody Price price) {
-    ResponseEntity<String> response;
 
-    try{
-      priceService.add(price);
-      logger.info("Price added.");
-      response = new ResponseEntity<>(HttpStatus.CREATED);
-    } catch (Exception e) {
+  @PostMapping
+  @Operation(summary = "Add a new price", description = "Add a new price to the application state")
+  public ResponseEntity<Price> add(@RequestBody Price price) {
+    try {
+      Price savedPrice = priceService.add(price);
+      logger.info("Price added successfully.");
+      return new ResponseEntity<>(savedPrice, HttpStatus.CREATED);
+    } catch (IllegalArgumentException e) {
       logger.error("Failed to add price: " + e.getMessage());
-      response = new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-      logger.error("Failed to add price");
+      return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
     }
-
-
-    return response;
   }
 
-    /**
+
+  /**
      * Update a price.
      *
      * @param price Price to be updated

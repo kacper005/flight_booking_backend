@@ -18,6 +18,9 @@ public class PriceService {
   @Autowired
   private PriceRepository priceRepository;
 
+  @Autowired
+  private FlightService flightService;
+
   /**
    * Get all prices from the application state.
    *
@@ -46,30 +49,27 @@ public class PriceService {
    * @return {@code true} when price is added, {@code false} on error
    */
   @Operation(summary = "Add a new price", description = "Add a new price to the application state")
-  public boolean add(Price price) {
-    boolean added = false;
-    boolean flightExists = false;
-
-    if (price != null) {
-      Price existingPrice = findByID(price.getPriceId());
-
-      // Check if the flight already exists in the database
-      FlightService flightService = new FlightService();
-      for (Flight f : flightService.getAll()) {
-        for (Flight flightInPrice : price.getFlights()) {
-          if (f.getFlightId() == flightInPrice.getFlightId()) {
-            flightExists = true;
-          }
-        }
-      }
-
-      if (existingPrice == null && flightExists) {
-        priceRepository.save(price);
-        added = true;
-      }
+  public Price add(Price price) {
+    if (price == null) {
+      throw new IllegalArgumentException("Price cannot be null");
     }
-    return added;
+
+
+    if (price.getPriceId() != null && priceRepository.existsById(price.getPriceId())) {
+      throw new IllegalArgumentException("Price with given ID already exists");
+    }
+
+
+    boolean flightExists = price.getFlights() != null && price.getFlights().stream()
+        .allMatch(flight -> flightService.findByID(flight.getFlightId()) != null);
+
+    if (!flightExists) {
+      throw new IllegalArgumentException("One or more associated flights do not exist");
+    }
+
+    return priceRepository.save(price);
   }
+
 
   /**
    * Remove a price from the application state (database).

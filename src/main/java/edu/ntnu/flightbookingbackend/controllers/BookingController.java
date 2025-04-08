@@ -1,9 +1,9 @@
 package edu.ntnu.flightbookingbackend.controllers;
-
 import edu.ntnu.flightbookingbackend.model.Booking;
+import edu.ntnu.flightbookingbackend.model.Flight;
 import edu.ntnu.flightbookingbackend.service.BookingService;
-
 import io.swagger.v3.oas.annotations.Operation;
+import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -75,27 +75,48 @@ public class BookingController {
      * @param booking Booking to be added
      * @return Status 201 if booking was added, 400 if failed
      */
-    @PostMapping()
+    @PostMapping
     @Operation(
         summary = "Add a new booking",
         description = "Add a new booking to the application state"
     )
     public ResponseEntity<String> add(@RequestBody Booking booking) {
-      ResponseEntity<String> response;
-
-     try{
-       bookingService.add(booking);
-         logger.info("Booking added.");
-            response = new ResponseEntity<>(HttpStatus.CREATED);
-     } catch (Exception e) {
-         logger.error("Failed to add booking: " + e.getMessage());
-         response = new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-         logger.error("Failed to add booking");
-     }
-
-
-     return response;
+      try {
+        bookingService.add(booking);
+        logger.info("Booking added with ID: " + booking.getBookingId());
+        return new ResponseEntity<>("Booking added successfully", HttpStatus.CREATED);
+      } catch (Exception e) {
+        logger.error("Failed to add booking: " + e.getMessage());
+        return new ResponseEntity<>("Failed to add booking: " + e.getMessage(),
+            HttpStatus.BAD_REQUEST);
+      }
     }
+
+  /**
+   * Add flight to an existing booking.
+   *
+   *
+   */
+  @PostMapping("/{id}/flights")
+  @Operation(
+      summary = "Add flight to booking",
+      description = "Add a flight to an existing booking"
+  )
+  public ResponseEntity<String> addFlightsToBooking(@PathVariable Integer id, @RequestBody
+  List<Flight> flights) {
+    try {
+      boolean success = bookingService.addFlightsToBooking(id, flights);
+      if (success) {
+        logger.info("Flights added to booking ID: " + id);
+        return new ResponseEntity<>("Flights added successfully", HttpStatus.OK);
+      } else {
+        return new ResponseEntity<>("Booking not found", HttpStatus.NOT_FOUND);
+      }
+    } catch (Exception e) {
+      logger.error("Failed to add flights: " + e.getMessage());
+      return new ResponseEntity<>("Failed to add flights ", HttpStatus.BAD_REQUEST);
+    }
+  }
 
   /**
    * Update a booking in the application state.

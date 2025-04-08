@@ -1,15 +1,13 @@
 package edu.ntnu.flightbookingbackend.model;
-
-import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToMany;
-import jakarta.persistence.ManyToOne;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -25,11 +23,12 @@ public class Price {
   private Integer priceId;
 
   @ManyToMany(mappedBy = "prices")
-  @JsonBackReference
-  private List<Flight> flights;
+  @JsonIgnore
+  private List<Flight> flights = new ArrayList<>();
 
   @Schema(description = "The type of class for the flight")
   private String classType;
+  @Column(nullable = true)
   @Schema(description = "The price of the flight")
   private float price;
   @Schema(description = "The name of the price provider")
@@ -37,8 +36,7 @@ public class Price {
   @Schema(description = "The currency of the price")
   private String currency;
 
-  public Price() {
-  }
+  public Price() {}
 
   public Integer getPriceId() {
     return priceId;
@@ -74,11 +72,11 @@ public class Price {
     this.classType = classType;
   }
 
-  public float getPrice() {
+  public Float getPrice() {
     return price;
   }
 
-  public void setPrice(float price) {
+  public void setPrice(Float price) {
     this.price = price;
   }
 
