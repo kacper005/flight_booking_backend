@@ -1,9 +1,11 @@
 package edu.ntnu.flightbookingbackend.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import edu.ntnu.flightbookingbackend.cryptography.CryptoConverter;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
+import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -26,6 +28,7 @@ public class User {
   @Column(unique = true, nullable = false)
   @Schema(description = "The email of the user")
   private String email;
+  @Convert(converter = CryptoConverter.class)
   @Schema(description = "The password of the user")
   private String password;
   @Schema(description = "The phone number of the user")
