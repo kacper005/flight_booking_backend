@@ -52,6 +52,9 @@ public class Flight {
   @Schema(description = "List of extra features available on the flight.", example = "[\"WiFi\", \"In-seat Power\", \"Extra Legroom\"]")
   private String extraFeatures;
 
+  @Schema(description = "List of available classes on the flight", example = "[\"Economy\", \"Business\", \"First Class\"]")
+  private String availableClasses;
+
   @Enumerated(EnumType.STRING)
   @Schema(description = "Current status of the flight.", example = "Scheduled,Delayed,Cancelled")
   private FlightStatus status;
@@ -143,6 +146,14 @@ public class Flight {
 
   public void setExtraFeatures(String extraFeatures) {
     this.extraFeatures = extraFeatures;
+  }
+
+  public String getAvailableClasses() {
+    return availableClasses;
+  }
+
+  public void setAvailableClasses(String availableClasses) {
+    this.availableClasses = availableClasses;
   }
 
   public FlightStatus getStatus() {
