@@ -40,7 +40,6 @@ public class Booking {
       joinColumns = @JoinColumn(name = "booking_id"),
       inverseJoinColumns = @JoinColumn(name = "flight_id")
   )
-  @JsonIgnore
   private List<Flight> flights = new ArrayList<>();
 
   public Booking() {
@@ -78,6 +77,7 @@ public class Booking {
     this.flights = flights;
   }
 
+  @JsonIgnore
   public Flight getFlight() {
     return flights.isEmpty() ? null : flights.get(0);
   }

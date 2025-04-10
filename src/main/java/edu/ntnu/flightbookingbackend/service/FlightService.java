@@ -82,7 +82,6 @@ public class FlightService {
      * @return {@code true} if prices were added, {@code false} if flight not found
      */
     @Transactional
-    @Operation(summary = "Add prices to flight", description = "Add prices to an existing flight")
     public boolean addPricesToFlight(Integer flightId, List<Price> prices) {
         Optional<Flight> optionalFlight = flightRepository.findById(flightId);
         if (optionalFlight.isEmpty()) {
@@ -92,8 +91,8 @@ public class FlightService {
         Flight flight = optionalFlight.get();
 
         for (Price price : prices) {
-            Price savedPrice = priceRepository.save(price);
-            flight.addPrice(savedPrice);
+            price.getFlights().add(flight);
+            flight.getPrices().add(price);
         }
 
         flightRepository.save(flight);
