@@ -49,7 +49,6 @@ public class AccessUserDetails implements UserDetails {
     return true;
   }
 
-  @Override
   public Integer getUserId() {
     return user.getUserId();
   }
