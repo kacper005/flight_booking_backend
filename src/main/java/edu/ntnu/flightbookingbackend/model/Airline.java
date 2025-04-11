@@ -24,8 +24,8 @@ public class Airline {
   @Schema(description = "Country where the airline is registered.", example = "Norway")
   private String country;
 
-  @Schema(description = "URL to the airline's logo.", example = "https://example.com/logo.png")
-  private String logoUrl;
+  @Schema(description = "Filename of the airline's logo.", example = "norwegian.png")
+  private String logoFileName;
 
 
   public Airline() {
@@ -63,12 +63,12 @@ public class Airline {
     this.country = country;
   }
 
-  public String getLogoUrl() {
-    return logoUrl;
+  public String getLogoFileName() {
+    return logoFileName;
   }
 
-  public void setLogoUrl(String logoUrl) {
-    this.logoUrl = logoUrl;
+  public void setLogoFileName(String logoFileName) {
+    this.logoFileName = logoFileName;
   }
 }
 

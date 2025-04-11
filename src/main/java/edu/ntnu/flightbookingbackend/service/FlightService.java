@@ -1,5 +1,6 @@
 package edu.ntnu.flightbookingbackend.service;
 
+import edu.ntnu.flightbookingbackend.dto.RoundTripFlightDTO;
 import edu.ntnu.flightbookingbackend.model.Flight;
 import edu.ntnu.flightbookingbackend.model.Price;
 import edu.ntnu.flightbookingbackend.repository.FlightRepository;
@@ -10,6 +11,7 @@ import jakarta.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -36,6 +38,54 @@ public class FlightService {
     public Iterable<Flight> getAll() {
         return flightRepository.findAll();
     }
+
+
+    /**
+     * Get all one-way flights from the application state.
+     *
+     * @return A list of one-way flights, empty list if there are none
+     */
+    public List<Flight> getOneWayFlights() {
+        List<Flight> allFlights = (List<Flight>) flightRepository.findAll();
+        return allFlights.stream()
+            .filter(flight -> !flight.getRoundTrip())
+            .collect(Collectors.toList());
+    }
+
+    /**
+     * Get all round-trip flights from the application state.
+     *
+     * @return A list of round-trip flights, empty list if there are none
+     */
+    @Operation(summary = "Get all round-trip flights",
+        description = "Get all round-trip flights from the application state")
+    public List<RoundTripFlightDTO> getRoundTripFlights() {
+        List<Flight> allFlights = (List<Flight>) flightRepository.findAll();
+        List<RoundTripFlightDTO> roundTrips = new ArrayList<>();
+
+        List<Flight> outboundFlights = allFlights.stream()
+            .filter(Flight::getRoundTrip)
+            .collect(Collectors.toList());
+
+        for (Flight outbound : outboundFlights) {
+            Optional<Flight> returnFlightOpt = outboundFlights.stream()
+                .filter(returnFlight ->
+                    !outbound.equals(returnFlight) &&
+                        outbound.getDepartureAirport().equals(returnFlight.getArrivalAirport()) &&
+                        outbound.getArrivalAirport().equals(returnFlight.getDepartureAirport()) &&
+                        returnFlight.getDepartureTime().isAfter(outbound.getArrivalTime()) &&
+                        outbound.getAirline().equals(returnFlight.getAirline()))
+                .findFirst();
+
+            returnFlightOpt.ifPresent(returnFlight ->
+                roundTrips.add(new RoundTripFlightDTO(outbound, returnFlight))
+            );
+        }
+
+        return roundTrips;
+    }
+
+
 
     /**
      * Finds a flight by ID. Returns the flight if found, null otherwise.

@@ -1,5 +1,6 @@
 package edu.ntnu.flightbookingbackend.controllers;
 
+import edu.ntnu.flightbookingbackend.dto.RoundTripFlightDTO;
 import edu.ntnu.flightbookingbackend.model.Flight;
 import edu.ntnu.flightbookingbackend.model.Price;
 import edu.ntnu.flightbookingbackend.service.FlightService;
@@ -47,7 +48,32 @@ public class FlightController {
         return flightService.getAll();
     }
 
-    /**
+
+  @GetMapping("/oneway")
+  @Operation(summary = "Get one-way flights", description = "Returns all flights that are not round trips")
+  public ResponseEntity<List<Flight>> getOneWayFlights() {
+    List<Flight> oneWayFlights = flightService.getOneWayFlights();
+    return new ResponseEntity<>(oneWayFlights, HttpStatus.OK);
+  }
+
+  /**
+   * Get all round-trip flights.
+   *
+   * @return List of round-trip flights
+   *
+   */
+  @GetMapping("/roundtrip")
+  @Operation(
+      summary = "Get all round-trip flights",
+      description = "Returns a list of round-trip flights (outbound and return combined)"
+  )
+  public ResponseEntity<List<RoundTripFlightDTO>> getRoundTripFlights() {
+    List<RoundTripFlightDTO> roundTrips = flightService.getRoundTripFlights();
+    return new ResponseEntity<>(roundTrips, HttpStatus.OK);
+  }
+
+
+  /**
      * Get a specific flight by ID.
      *
      * @param id ID of the flight to be returned
