@@ -38,69 +38,61 @@ public class SecurityConfiguration {
   public SecurityFilterChain configure(HttpSecurity http) throws Exception {
     AuthenticationManagerBuilder auth = http.getSharedObject(AuthenticationManagerBuilder.class);
     auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder());
-
     http.csrf(AbstractHttpConfigurer::disable)
-            .authorizeHttpRequests(authz -> authz
-                    .anyRequest().permitAll()
-            )
-            .sessionManagement(
-                    session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-            );
-    // .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class); // ← Kommentert ut
+        .authorizeHttpRequests(
+            authz ->
+                authz
+                    // Open endpoints
+                    .requestMatchers("/auth/**", "/swagger-ui/**", "/v3/api-docs/**")
+                    .permitAll()
+
+                    // Everyone can view flights, airports, airlines
+                    .requestMatchers(HttpMethod.GET, "/flights/**", "/airports/**", "/airlines/**")
+                    .permitAll()
+
+                    // ADMIN can manage flights, airports, airlines
+                    .requestMatchers(HttpMethod.POST, "/flights/**", "/airports/**", "/airlines/**")
+                    .hasAuthority("ADMIN")
+                    .requestMatchers(HttpMethod.PUT, "/flights/**", "/airports/**", "/airlines/**")
+                    .hasAuthority("ADMIN")
+                    .requestMatchers(
+                        HttpMethod.DELETE, "/flights/**", "/airports/**", "/airlines/**")
+                    .hasAuthority("ADMIN")
+
+                    // ADMIN can manage users
+                    .requestMatchers("/users/**")
+                    .hasAuthority("ROLE_ADMIN")
+
+                    // Feedback:
+                    // Everyone can read
+                    .requestMatchers(HttpMethod.GET, "/feedback/**")
+                    .permitAll()
+                    // USER or ADMIN can post, update, delete
+                    .requestMatchers(HttpMethod.POST, "/feedback/**")
+                    .hasAnyAuthority("USER", "ADMIN")
+                    .requestMatchers(HttpMethod.PUT, "/feedback/**")
+                    .hasAnyAuthority("USER", "ADMIN")
+                    .requestMatchers(HttpMethod.DELETE, "/feedback/**")
+                    .hasAnyAuthority("USER", "ADMIN")
+
+                    // Booking:
+                    // USER or ADMIN can book, update, delete
+                    .requestMatchers("/booking/**")
+                    .hasAnyAuthority("USER", "ADMIN")
+
+                    // (Optional) Protect admin route if you have it
+                    .requestMatchers("/admin/**")
+                    .hasAuthority("ADMIN")
+
+                    // Any other endpoint requires login
+                    .anyRequest()
+                    .authenticated())
+        .sessionManagement(
+            session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+        .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
 
     return http.build();
   }
-
-//  @Bean
-//  public SecurityFilterChain configure(HttpSecurity http) throws Exception {
-//    AuthenticationManagerBuilder auth = http.getSharedObject(AuthenticationManagerBuilder.class);
-//    auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder());
-//    http.csrf(AbstractHttpConfigurer::disable)
-//        .authorizeHttpRequests(
-//            authz ->
-//                authz
-//                    // Open endpoints
-//                    .requestMatchers("/auth/**", "/swagger-ui/**", "/v3/api-docs/**")
-//                    .permitAll()
-//                    .requestMatchers("/flights/**", "/airports/**")
-//                    .permitAll()
-//
-//                    // Feedback: Only logged in users kan create and update feedback
-//                    .requestMatchers(HttpMethod.POST, "/feedback/**")
-//                    .hasAuthority("USER")
-//                    .requestMatchers(HttpMethod.PUT, "/feedback/**")
-//                    .hasAuthority("USER")
-//                    .requestMatchers(HttpMethod.DELETE, "/feedback/**")
-//                    .hasAuthority("USER")
-//
-//                    // Booking: Only logged in users can book flights
-//                    .requestMatchers("/booking/**")
-//                    .hasAuthority("USER")
-//
-//                    // Flight-administration: Only ADMIN can add, delete and update flights and
-//                    // airports
-//                    .requestMatchers(HttpMethod.POST, "/flights/**")
-//                    .hasAuthority("ADMIN")
-//                    .requestMatchers(HttpMethod.PUT, "/flights/**")
-//                    .hasAuthority("ADMIN")
-//                    .requestMatchers(HttpMethod.DELETE, "/flights/**")
-//                    .hasAuthority("ADMIN")
-//                    .requestMatchers(HttpMethod.POST, "/airports/**")
-//                    .hasAuthority("ADMIN")
-//                    .requestMatchers(HttpMethod.PUT, "/airports/**")
-//                    .hasAuthority("ADMIN")
-//                    .requestMatchers(HttpMethod.DELETE, "/airports/**")
-//                    .hasAuthority("ADMIN")
-//
-//                    // Other endpoints require authentication
-//                    .anyRequest()
-//                    .authenticated())
-//        .sessionManagement(
-//            session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-//        .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
-//
-//    return http.build();
-//  }
 
   @Bean
   public AuthenticationManager authenticationManager(AuthenticationConfiguration config)

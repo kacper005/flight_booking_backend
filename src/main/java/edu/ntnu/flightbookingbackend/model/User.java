@@ -2,15 +2,10 @@ package edu.ntnu.flightbookingbackend.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import edu.ntnu.flightbookingbackend.cryptography.CryptoConverter;
+import edu.ntnu.flightbookingbackend.enums.Role;
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
-import jakarta.persistence.Convert;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.*;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -43,8 +38,8 @@ public class User {
   private String country;
   @Schema(description = "The gender of the user")
   private String gender;
-  @Schema(description = "The role of the user")
-  private String role;
+  @Enumerated(EnumType.STRING)
+  private Role role;
   @Schema(description = "The date the user was created")
   private String createdAt;
 
@@ -132,13 +127,14 @@ public class User {
     this.gender = gender;
   }
 
-  public String getRole() {
+  public Role getRole() {
     return role;
   }
 
-  public void setRole(String role) {
+  public void setRole(Role role) {
     this.role = role;
   }
+
 
   public String getCreatedAt() {
     return createdAt;

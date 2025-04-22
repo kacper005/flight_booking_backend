@@ -16,7 +16,8 @@ public class AccessUserDetails implements UserDetails {
 
   @Override
   public Collection<? extends GrantedAuthority> getAuthorities() {
-    return List.of(new SimpleGrantedAuthority(user.getRole()));
+    String role = "ROLE_" + user.getRole().name(); // .name() = "ADMIN" or "USER"
+    return List.of(new SimpleGrantedAuthority(role));
   }
 
   @Override
