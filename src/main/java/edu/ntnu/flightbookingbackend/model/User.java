@@ -32,7 +32,7 @@ public class User {
   @Schema(description = "The password of the user")
   private String password;
   @Schema(description = "The phone number of the user")
-  private int phone;
+  private String phone;
   @Schema(description = "The first name of the user")
   private String firstName;
   @Schema(description = "The last name of the user")
@@ -84,11 +84,11 @@ public class User {
     this.password = password;
   }
 
-  public int getPhone() {
+  public String getPhone() {
     return phone;
   }
 
-  public void setPhone(int phone) {
+  public void setPhone(String phone) {
     this.phone = phone;
   }
 

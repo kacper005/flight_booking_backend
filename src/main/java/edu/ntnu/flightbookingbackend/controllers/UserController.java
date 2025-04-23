@@ -85,9 +85,9 @@ public class UserController {
       logger.info("User added.");
       response = new ResponseEntity<>(HttpStatus.CREATED);
     } catch (Exception e) {
-      response = new ResponseEntity<>("Failed to add user: " + e.getMessage(),
+      response = new ResponseEntity<>(e.getMessage(),
           HttpStatus.BAD_REQUEST);
-      logger.error("Failed to add user: " + user.getUserId() + " " + user.getEmail() + " " +
+      logger.error("Failed to add user: " + " " + user.getEmail() + " " +
           user.getPhone() + " " + user.getFirstName() + " " + user.getLastName() + " " +
           user.getDateOfBirth() + " " + user.getCountry() + " " + user.getGender() + " " +
           user.getRole() + " " + user.getCreatedAt());
