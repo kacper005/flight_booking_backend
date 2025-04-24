@@ -11,6 +11,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -46,7 +47,7 @@ public class User {
   @Schema(description = "The role of the user")
   private String role;
   @Schema(description = "The date the user was created")
-  private String createdAt;
+  private LocalDateTime createdAt;
 
   @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
   @JsonIgnore
@@ -140,11 +141,11 @@ public class User {
     this.role = role;
   }
 
-  public String getCreatedAt() {
+  public LocalDateTime getCreatedAt() {
     return createdAt;
   }
 
-  public void setCreatedAt(String createdAt) {
+  public void setCreatedAt(LocalDateTime createdAt) {
     this.createdAt = createdAt;
   }
 
