@@ -44,29 +44,27 @@ public class UserService {
    * Add a user to the application state (persist in the database).
    *
    * @param user User to persist
-   * @return {@code true} when user is added, {@code false} on error
+   * @return {@code true} when user is added, {@code false} when user already exists
    */
   @Operation(summary = "Add a new user", description = "Add a new user to the application state")
   public boolean add(User user) {
-    boolean added = false;
-    boolean emailExists = false;
+    if (user == null) {
+      throw new IllegalArgumentException("User cannot be null");
+    }
 
-    if (user != null) {
-      // Check if the email already exists in the database
-      for (User u : userRepository.findAll()) {
-        if (u.getEmail().equals(user.getEmail())) {
-          emailExists = true;
-        }
+    for (User u : userRepository.findAll()) {
+      if (u.getEmail().equals(user.getEmail())) {
+        throw new IllegalArgumentException("A user with this email already exists: " + user.getEmail());
       }
-
-      // Add the user if it does not already exist in the database
-      if (!emailExists) {
-        userRepository.save(user);
-        added = true;
+      if (u.getPhone().equals(user.getPhone())) {
+        throw new IllegalArgumentException("A user with this phone number already exists: " + user.getPhone());
       }
     }
-    return added;
+
+    userRepository.save(user);
+    return true;
   }
+
 
   /**
    * Remove a user from the application state (database).
