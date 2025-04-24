@@ -18,25 +18,38 @@ public class FlightBookingBackendApplication {
   }
 
   @Bean
-  public CommandLineRunner initUsers (UserRepository userRepository, PasswordEncoder passwordEncoder) {
+  public CommandLineRunner initUsers(UserRepository userRepository, PasswordEncoder passwordEncoder) {
     return args -> {
-      if (!userRepository.existsByEmail("admin@example.com")) {
+      if (!userRepository.existsByEmail("chuck@gmail.com")) {
         User admin = new User();
-        admin.setEmail("admin@example.com");
-        admin.setPassword(passwordEncoder.encode("adminpass"));
+        admin.setEmail("chuck@gmail.com");
+        admin.setPassword(passwordEncoder.encode("Nunchucks2024"));
+        admin.setPhone("99887766");
+        admin.setFirstName("Chuck");
+        admin.setLastName("Norris");
+        admin.setDateOfBirth("02.02.1992");
+        admin.setCountry("USA");
+        admin.setGender("Male");
         admin.setRole(Role.ADMIN);
         userRepository.save(admin);
-        System.out.println("Admin user created.");
+        System.out.println("Admin user Chuck created.");
       }
 
-      if (!userRepository.existsByEmail("user@example.com")) {
+      if (!userRepository.existsByEmail("dave@gmail.com")) {
         User user = new User();
-        user.setEmail("user@example.com");
-        user.setPassword(passwordEncoder.encode("userpass"));
+        user.setEmail("dave@gmail.com");
+        user.setPassword(passwordEncoder.encode("Dangerous2024"));
+        user.setPhone("98765432");
+        user.setFirstName("Dave");
+        user.setLastName("Norman");
+        user.setDateOfBirth("01.01.1991");
+        user.setCountry("Norway");
+        user.setGender("Male");
         user.setRole(Role.USER);
         userRepository.save(user);
-        System.out.println("Regular user created.");
+        System.out.println("Regular user Dave created.");
       }
     };
   }
+
 }
