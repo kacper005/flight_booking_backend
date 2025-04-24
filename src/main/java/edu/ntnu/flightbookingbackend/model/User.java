@@ -16,6 +16,7 @@ import java.util.List;
 @Entity
 @Schema(description = "A user of the system")
 public class User {
+  public static Object Role;
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name = "user_id")
@@ -24,7 +25,7 @@ public class User {
   @Column(unique = true, nullable = false)
   @Schema(description = "The email of the user")
   private String email;
-  @Convert(converter = CryptoConverter.class)
+//  @Convert(converter = CryptoConverter.class)
   @Schema(description = "The password of the user")
   private String password;
   @Schema(description = "The phone number of the user")

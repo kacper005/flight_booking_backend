@@ -1,5 +1,6 @@
 package edu.ntnu.flightbookingbackend.service;
 
+import edu.ntnu.flightbookingbackend.enums.Role;
 import edu.ntnu.flightbookingbackend.model.User;
 import edu.ntnu.flightbookingbackend.repository.UserRepository;
 import io.swagger.v3.oas.annotations.Operation;
@@ -62,7 +63,7 @@ public class UserService {
     }
 
     if (user.getRole() == null) {
-      user.setRole("USER");
+      user.setRole(Role.USER);
     }
 
     if(user.getCreatedAt() == null) {

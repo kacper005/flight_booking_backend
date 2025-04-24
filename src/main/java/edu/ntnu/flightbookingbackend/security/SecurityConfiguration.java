@@ -32,7 +32,7 @@ public class SecurityConfiguration {
    * This method will be called automatically by the framework to find the authentication to use.
    *
    * @param http HttpSecurity setting builder
-   * @throws Exception When security configuration fails
+   * @throws Exception if an error occurs
    */
   @Bean
   public SecurityFilterChain configure(HttpSecurity http) throws Exception {
@@ -59,7 +59,11 @@ public class SecurityConfiguration {
                         HttpMethod.DELETE, "/flights/**", "/airports/**", "/airlines/**")
                     .hasAuthority("ROLE_ADMIN")
 
-                    // ADMIN can manage users
+//                    // ADMIN can create users
+//                    .requestMatchers(HttpMethod.POST, "/users","/users/","/users/**")
+//                    .hasAuthority("ROLE_ADMIN")
+
+                    // ADMIN can manage all /users/** endpoints
                     .requestMatchers("/users/**")
                     .hasAuthority("ROLE_ADMIN")
 
