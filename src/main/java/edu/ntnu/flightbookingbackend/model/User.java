@@ -6,6 +6,7 @@ import edu.ntnu.flightbookingbackend.enums.Role;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -41,7 +42,7 @@ public class User {
   @Enumerated(EnumType.STRING)
   private Role role;
   @Schema(description = "The date the user was created")
-  private String createdAt;
+  private LocalDateTime createdAt;
 
   @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
   @JsonIgnore
@@ -136,11 +137,11 @@ public class User {
   }
 
 
-  public String getCreatedAt() {
+  public LocalDateTime getCreatedAt() {
     return createdAt;
   }
 
-  public void setCreatedAt(String createdAt) {
+  public void setCreatedAt(LocalDateTime createdAt) {
     this.createdAt = createdAt;
   }
 

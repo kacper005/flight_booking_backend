@@ -3,8 +3,8 @@ package edu.ntnu.flightbookingbackend.service;
 import edu.ntnu.flightbookingbackend.model.User;
 import edu.ntnu.flightbookingbackend.repository.UserRepository;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import java.time.LocalDateTime;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -59,6 +59,14 @@ public class UserService {
       if (u.getPhone().equals(user.getPhone())) {
         throw new IllegalArgumentException("A user with this phone number already exists: " + user.getPhone());
       }
+    }
+
+    if (user.getRole() == null) {
+      user.setRole("USER");
+    }
+
+    if(user.getCreatedAt() == null) {
+      user.setCreatedAt(LocalDateTime.now());
     }
 
     userRepository.save(user);
@@ -129,6 +137,7 @@ public class UserService {
         }
       }
     }
+
 
     if (errorMessage == null) {
       userRepository.save(user);
