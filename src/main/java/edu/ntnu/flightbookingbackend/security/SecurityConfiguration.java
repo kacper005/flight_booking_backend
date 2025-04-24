@@ -52,12 +52,12 @@ public class SecurityConfiguration {
 
                     // ADMIN can manage flights, airports, airlines
                     .requestMatchers(HttpMethod.POST, "/flights/**", "/airports/**", "/airlines/**")
-                    .hasAuthority("ADMIN")
+                    .hasAuthority("ROLE_ADMIN")
                     .requestMatchers(HttpMethod.PUT, "/flights/**", "/airports/**", "/airlines/**")
-                    .hasAuthority("ADMIN")
+                    .hasAuthority("ROLE_ADMIN")
                     .requestMatchers(
                         HttpMethod.DELETE, "/flights/**", "/airports/**", "/airlines/**")
-                    .hasAuthority("ADMIN")
+                    .hasAuthority("ROLE_ADMIN")
 
                     // ADMIN can manage users
                     .requestMatchers("/users/**")
@@ -69,20 +69,20 @@ public class SecurityConfiguration {
                     .permitAll()
                     // USER or ADMIN can post, update, delete
                     .requestMatchers(HttpMethod.POST, "/feedback/**")
-                    .hasAnyAuthority("USER", "ADMIN")
+                    .hasAnyAuthority("ROLE_USER", "ROLE_ADMIN")
                     .requestMatchers(HttpMethod.PUT, "/feedback/**")
-                    .hasAnyAuthority("USER", "ADMIN")
+                    .hasAnyAuthority("ROLE_USER", "ROLE_ADMIN")
                     .requestMatchers(HttpMethod.DELETE, "/feedback/**")
-                    .hasAnyAuthority("USER", "ADMIN")
+                    .hasAnyAuthority("ROLE_USER", "ROLE_ADMIN")
 
                     // Booking:
                     // USER or ADMIN can book, update, delete
                     .requestMatchers("/booking/**")
-                    .hasAnyAuthority("USER", "ADMIN")
+                    .hasAnyAuthority("ROLE_USER", "ROLE_ADMIN")
 
-                    // (Optional) Protect admin route if you have it
+                    // (Optional) Protect admin route
                     .requestMatchers("/admin/**")
-                    .hasAuthority("ADMIN")
+                    .hasAuthority("ROLE_ADMIN")
 
                     // Any other endpoint requires login
                     .anyRequest()

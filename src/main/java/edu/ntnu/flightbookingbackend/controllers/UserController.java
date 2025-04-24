@@ -166,4 +166,20 @@ public class UserController {
     return response;
   }
 
+  @DeleteMapping
+  public ResponseEntity<String> deleteAllExceptAdmin() {
+    Iterable<User> users = userService.getAll();
+    int deletedCount = 0;
+
+    for (User user : users) {
+      if (!user.getUserId().equals(1)) {
+        userService.remove(user.getUserId());
+        deletedCount++;
+      }
+    }
+
+    return ResponseEntity.ok("Deleted " + deletedCount + " users (excluding admin).");
+  }
+
+
 }
