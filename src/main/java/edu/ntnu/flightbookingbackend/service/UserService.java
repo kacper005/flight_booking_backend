@@ -8,6 +8,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import java.time.LocalDateTime;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 /**
@@ -47,6 +48,9 @@ public class UserService {
    * @param user User to persist
    * @return {@code true} when user is added, {@code false} when user already exists
    */
+  @Autowired
+  private PasswordEncoder passwordEncoder;
+
   @Operation(summary = "Add a new user", description = "Add a new user to the application state")
   public boolean add(User user) {
     if (user == null) {
@@ -62,7 +66,10 @@ public class UserService {
       }
     }
 
-    if (user.getRole() == null) {
+    if (user.getPassword() != null) {
+      user.setPassword(passwordEncoder.encode(user.getPassword()));
+    }
+      if (user.getRole() == null) {
       user.setRole(Role.USER);
     }
 
