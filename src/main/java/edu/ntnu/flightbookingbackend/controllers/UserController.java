@@ -1,5 +1,6 @@
 package edu.ntnu.flightbookingbackend.controllers;
 
+import edu.ntnu.flightbookingbackend.enums.Role;
 import edu.ntnu.flightbookingbackend.model.User;
 import edu.ntnu.flightbookingbackend.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -172,14 +173,16 @@ public class UserController {
     int deletedCount = 0;
 
     for (User user : users) {
-      if (!user.getUserId().equals(1)) {
+      // Ikke slett brukere med rollen ADMIN
+      if (user.getRole() != Role.ADMIN) {
         userService.remove(user.getUserId());
         deletedCount++;
       }
     }
 
-    return ResponseEntity.ok("Deleted " + deletedCount + " users (excluding admin).");
+    return ResponseEntity.ok("Deleted " + deletedCount + " users (excluding admins).");
   }
+
 
 
 }

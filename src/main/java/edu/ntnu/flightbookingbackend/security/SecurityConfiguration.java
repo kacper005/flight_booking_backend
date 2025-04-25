@@ -46,22 +46,36 @@ public class SecurityConfiguration {
                     .requestMatchers("/auth/**", "/swagger-ui/**", "/v3/api-docs/**")
                     .permitAll()
 
-                    // Everyone can view flights, airports, airlines
-                    .requestMatchers(HttpMethod.GET, "/flights/**", "/airports/**", "/airlines/**")
+                    // Everyone can view flights, airports, airlines, price
+                    .requestMatchers(HttpMethod.GET, "/flights/search")
+                    .permitAll()
+                    .requestMatchers(HttpMethod.GET, "/flights/roundtrip")
+                    .permitAll()
+                    .requestMatchers(HttpMethod.GET, "/flights/oneway")
+                    .permitAll()
+                    .requestMatchers(HttpMethod.GET, "/flights/return")
+                    .permitAll()
+                    .requestMatchers(HttpMethod.GET, "/airports/**", "/airlines/**", "/prices/**", "/flights/**")
                     .permitAll()
 
-                    // ADMIN can manage flights, airports, airlines
-                    .requestMatchers(HttpMethod.POST, "/flights/**", "/airports/**", "/airlines/**")
-                    .hasAuthority("ROLE_ADMIN")
-                    .requestMatchers(HttpMethod.PUT, "/flights/**", "/airports/**", "/airlines/**")
+                    // ADMIN can manage flights, airports, airlines, prices
+                    .requestMatchers(
+                        HttpMethod.POST,
+                        "/flights/**",
+                        "/airports/**",
+                        "/airlines/**",
+                        "/prices/**")
                     .hasAuthority("ROLE_ADMIN")
                     .requestMatchers(
-                        HttpMethod.DELETE, "/flights/**", "/airports/**", "/airlines/**")
+                        HttpMethod.PUT, "/flights/**", "/airports/**", "/airlines/**", "/prices/**")
                     .hasAuthority("ROLE_ADMIN")
-
-//                    // ADMIN can create users
-//                    .requestMatchers(HttpMethod.POST, "/users","/users/","/users/**")
-//                    .hasAuthority("ROLE_ADMIN")
+                    .requestMatchers(
+                        HttpMethod.DELETE,
+                        "/flights/**",
+                        "/airports/**",
+                        "/airlines/**",
+                        "/prices/**")
+                    .hasAuthority("ROLE_ADMIN")
 
                     // ADMIN can manage all /users/** endpoints
                     .requestMatchers("/users/**")
