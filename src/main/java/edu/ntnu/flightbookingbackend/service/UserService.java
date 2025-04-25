@@ -130,7 +130,6 @@ public class UserService {
       errorMessage = "User ID does not match the ID in JSON data (response body).";
     }
 
-    // Check if the email already exists in the database for another user
     if (user != null) {
       for (User u : userRepository.findAll()) {
         if (u.getEmail().equals(user.getEmail()) && u.getUserId() != user.getUserId()) {
@@ -138,7 +137,6 @@ public class UserService {
         }
       }
     }
-
 
     if (errorMessage == null) {
       userRepository.save(user);

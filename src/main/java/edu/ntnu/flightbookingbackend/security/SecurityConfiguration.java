@@ -1,5 +1,6 @@
 package edu.ntnu.flightbookingbackend.security;
 
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -15,6 +16,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import static org.springframework.security.config.Customizer.withDefaults;
 
 /**
  * Creates AuthenticationManager - set up authentication type. The @EnableMethodSecurity is needed
@@ -38,7 +40,7 @@ public class SecurityConfiguration {
   public SecurityFilterChain configure(HttpSecurity http) throws Exception {
     AuthenticationManagerBuilder auth = http.getSharedObject(AuthenticationManagerBuilder.class);
     auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder());
-    http.csrf(AbstractHttpConfigurer::disable)
+    http.cors(withDefaults()).csrf(AbstractHttpConfigurer::disable)
         .authorizeHttpRequests(
             authz ->
                 authz
@@ -78,8 +80,15 @@ public class SecurityConfiguration {
                     .hasAuthority("ROLE_ADMIN")
 
                     // ADMIN can manage all /users/** endpoints
-                    .requestMatchers("/users/**")
+                    .requestMatchers(HttpMethod.GET,"/users/**")
                     .hasAuthority("ROLE_ADMIN")
+                    .requestMatchers(HttpMethod.PUT,"/users/**")
+                    .hasAuthority("ROLE_ADMIN")
+                    .requestMatchers(HttpMethod.DELETE,"/users/**")
+                    .hasAuthority("ROLE_ADMIN")
+
+                    // Everyone can register
+                    .requestMatchers( HttpMethod.POST, "/users/**").permitAll()
 
                     // Feedback:
                     // Everyone can read

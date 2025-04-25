@@ -5,10 +5,12 @@ import edu.ntnu.flightbookingbackend.model.Flight;
 import edu.ntnu.flightbookingbackend.model.Price;
 import edu.ntnu.flightbookingbackend.service.FlightService;
 import io.swagger.v3.oas.annotations.Operation;
+import java.time.LocalDateTime;
 import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -18,6 +20,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 
@@ -172,6 +175,19 @@ public class FlightController {
 
     return response;
   }
+
+  @GetMapping("/search")
+  public ResponseEntity<?> searchFlights(
+      @RequestParam String from,
+      @RequestParam String to,
+      @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime start,
+      @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime end,
+      @RequestParam boolean roundTrip
+  ) {
+    List<?> results = flightService.searchFlights(from, to, start, end, roundTrip);
+    return ResponseEntity.ok(results);
+  }
+
 
   /**
    * Delete a flight by ID.

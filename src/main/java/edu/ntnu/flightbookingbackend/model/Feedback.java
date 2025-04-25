@@ -34,6 +34,7 @@ public class Feedback {
     private String comment;
 
     @Schema(description = "The timestamp when the feedback was submitted")
+    @Column(updatable = false)
     private String createdAt;
 
     public Feedback() {

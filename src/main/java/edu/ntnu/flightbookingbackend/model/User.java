@@ -43,6 +43,7 @@ public class User {
   @Enumerated(EnumType.STRING)
   private Role role;
   @Schema(description = "The date the user was created")
+  @Column(updatable = false)
   private LocalDateTime createdAt;
 
   @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
