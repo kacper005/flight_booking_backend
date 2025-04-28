@@ -16,7 +16,7 @@ public class AccessUserDetails implements UserDetails {
 
   @Override
   public Collection<? extends GrantedAuthority> getAuthorities() {
-    String role = "ROLE_" + user.getRole().name(); // .name() = "ADMIN" or "USER"
+    String role = "ROLE_" + user.getRole().name();
     return List.of(new SimpleGrantedAuthority(role));
   }
 
@@ -27,7 +27,7 @@ public class AccessUserDetails implements UserDetails {
 
   @Override
   public String getUsername() {
-    return user.getEmail(); // Uses email for log in
+    return user.getEmail(); // Used for login
   }
 
   @Override

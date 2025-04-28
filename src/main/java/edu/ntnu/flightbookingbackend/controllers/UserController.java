@@ -2,13 +2,16 @@ package edu.ntnu.flightbookingbackend.controllers;
 
 import edu.ntnu.flightbookingbackend.enums.Role;
 import edu.ntnu.flightbookingbackend.model.User;
+import edu.ntnu.flightbookingbackend.security.AccessUserDetails;
 import edu.ntnu.flightbookingbackend.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.neo4j.Neo4jProperties;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -183,6 +186,49 @@ public class UserController {
     return ResponseEntity.ok("Deleted " + deletedCount + " users (excluding admins).");
   }
 
+  /**
+   * Get the logged-in user's profile.
+   * @param authentication
+   * @return
+   */
+  @GetMapping("/me")
+  @Operation(
+          summary = "Get your own user information",
+          description = "Fetches the currently authenticated user's information"
+  )
+  public ResponseEntity<User> getOwnProfile(Authentication authentication) {
+    AccessUserDetails userDetails = (AccessUserDetails) authentication.getPrincipal();
+    Integer loggedInUserId = userDetails.getUserId();
 
+    User user = userService.findByID(loggedInUserId);
+    if (user == null) {
+      return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
+    return new ResponseEntity<>(user, HttpStatus.OK);
+  }
+
+
+  /**
+   * Update the logged-in user's profile.
+   * @param updatedUser
+   * @param authentication
+   * @return
+   */
+  @PutMapping("/me")
+  @Operation (
+      summary = "Update your own profile",
+      description = "Allows a user to update their own profile information"
+  )
+  public ResponseEntity<String> updateProfile(@RequestBody User updatedUser, Authentication authentication) {
+    AccessUserDetails userDetails = (AccessUserDetails) authentication.getPrincipal();
+    Integer loggedInUserId = userDetails.getUserId();
+
+    String errorMessage = userService.updateOwnProfile(loggedInUserId, updatedUser);
+    if (errorMessage == null) {
+      return new ResponseEntity<>(HttpStatus.OK);
+    } else {
+        return new ResponseEntity<>(errorMessage, HttpStatus.BAD_REQUEST);
+    }
+  }
 
 }

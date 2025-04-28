@@ -3,10 +3,8 @@ package edu.ntnu.flightbookingbackend.security;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import javax.crypto.SecretKey;
-
 import java.util.Date;
 import java.util.function.Function;
-
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
@@ -21,28 +19,36 @@ public class JwtUtil {
     this.secretKey = Keys.hmacShaKeyFor(secret.getBytes());
   }
 
-  public String generateToken(UserDetails userDetails) {
+  public String generateToken(AccessUserDetails userDetails) {
     long timeNow = System.currentTimeMillis();
     long expirationTime = timeNow + 60 * 60 * 1000; // 1 hour
 
     return Jwts.builder()
-        .setSubject(userDetails.getUsername())
-        .claim(ROLE_KEY, userDetails.getAuthorities())
-        .setIssuedAt(new Date(timeNow))
-        .setExpiration(new Date(expirationTime))
-        .signWith(secretKey, SignatureAlgorithm.HS256)
-        .compact();
+            .setSubject(String.valueOf(userDetails.getUserId())) // Nå bruker vi userId
+            .claim(ROLE_KEY, userDetails.getAuthorities())
+            .claim("email", userDetails.getUsername())
+            .setIssuedAt(new Date(timeNow))
+            .setExpiration(new Date(expirationTime))
+            .signWith(secretKey, SignatureAlgorithm.HS256)
+            .compact();
   }
 
-  public String extractUsername(String token) throws JwtException {
-    return extractClaim(token, Claims::getSubject);
+  public Integer extractUserId(String token) {
+    String userIdStr = extractClaim(token, Claims::getSubject);
+    return Integer.parseInt(userIdStr);
   }
 
-  public boolean validateToken(String token, UserDetails userDetails) throws JwtException {
-    final String username = extractUsername(token);
-    return userDetails != null &&
-            username.equals(userDetails.getUsername()) &&
-            !isTokenExpired(token);
+  public String extractEmail(String token) {
+    return extractAllClaims(token).get("email", String.class);
+  }
+
+  public boolean validateToken(String token, UserDetails userDetails) {
+    return userDetails != null && !isTokenExpired(token);
+  }
+
+
+  private boolean isTokenExpired(String token) {
+    return extractExpiration(token).before(new Date());
   }
 
   private Date extractExpiration(String token) {
@@ -50,8 +56,7 @@ public class JwtUtil {
   }
 
   private <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
-    final Claims claims = extractAllClaims(token);
-    return claimsResolver.apply(claims);
+    return claimsResolver.apply(extractAllClaims(token));
   }
 
   private Claims extractAllClaims(String token) {
@@ -60,9 +65,5 @@ public class JwtUtil {
             .build()
             .parseClaimsJws(token)
             .getBody();
-  }
-
-  private boolean isTokenExpired(String token) {
-    return extractExpiration(token).before(new Date());
   }
 }

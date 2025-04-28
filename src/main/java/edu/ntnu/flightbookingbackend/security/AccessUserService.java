@@ -9,14 +9,20 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class AccessUserService implements UserDetailsService {
+
   @Autowired
   private UserRepository userRepository;
 
   @Override
   public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
     return userRepository.findByEmail(email)
-        .map(AccessUserDetails::new)
-        .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+            .map(AccessUserDetails::new)
+            .orElseThrow(() -> new UsernameNotFoundException("User not found with email: " + email));
   }
 
+  public UserDetails loadUserByUserId(Integer userId) throws UsernameNotFoundException {
+    return userRepository.findById(userId)
+            .map(AccessUserDetails::new)
+            .orElseThrow(() -> new UsernameNotFoundException("User not found with ID: " + userId));
+  }
 }

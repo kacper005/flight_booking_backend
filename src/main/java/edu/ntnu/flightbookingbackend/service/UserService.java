@@ -161,4 +161,55 @@ public class UserService {
   public long getCount() {
     return userRepository.count();
   }
+
+  /**
+   * Update the logged-in user's profile.
+   *
+   * @param loggedInUserId ID of the logged-in user
+   * @param updatedUser    User data to update
+   * @return Null on success, error message on error
+   */
+  public String updateOwnProfile(Integer loggedInUserId, User updatedUser) {
+    User existingUser = findByID(loggedInUserId);
+
+    if (existingUser == null) {
+      return "User not found.";
+    }
+
+    // Check if new email already exists for another user
+    if (!existingUser.getEmail().equals(updatedUser.getEmail())) {
+      User userByEmail = userRepository.findByEmail(updatedUser.getEmail()).orElse(null);
+      if (userByEmail != null) {
+        return "Email already exists.";
+      }
+    }
+
+    // Check if new phone already exists for another user
+    if (!existingUser.getPhone().equals(updatedUser.getPhone())) {
+      for (User u : userRepository.findAll()) {
+        if (u.getPhone().equals(updatedUser.getPhone()) && !u.getUserId().equals(loggedInUserId)) {
+          return "Phone number already exists.";
+        }
+      }
+    }
+
+    // Update allowed fields
+    existingUser.setFirstName(updatedUser.getFirstName());
+    existingUser.setLastName(updatedUser.getLastName());
+    existingUser.setPhone(updatedUser.getPhone());
+    existingUser.setEmail(updatedUser.getEmail());
+    existingUser.setDateOfBirth(updatedUser.getDateOfBirth());
+    existingUser.setCountry(updatedUser.getCountry());
+    existingUser.setGender(updatedUser.getGender());
+
+    // Update password if provided
+    if (updatedUser.getPassword() != null && !updatedUser.getPassword().isEmpty()) {
+      existingUser.setPassword(passwordEncoder.encode(updatedUser.getPassword()));
+    }
+
+    // Save updated user
+    userRepository.save(existingUser);
+    return null; // success
+  }
+
 }

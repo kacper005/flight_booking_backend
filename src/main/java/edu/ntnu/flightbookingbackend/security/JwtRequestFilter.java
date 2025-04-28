@@ -1,8 +1,7 @@
 package edu.ntnu.flightbookingbackend.security;
 
-
-import io.jsonwebtoken.JwtException;
-import io.jsonwebtoken.MalformedJwtException;
+import edu.ntnu.flightbookingbackend.model.User;
+import edu.ntnu.flightbookingbackend.repository.UserRepository;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -13,96 +12,58 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-/**
- * A filter that is applied to all HTTP requests and checks for a valid JWT token in
- * the 'Authorization: Bearer <token>' header. If the token is valid, it sets the
- * authentication in the security context.
- */
 @Component
 public class JwtRequestFilter extends OncePerRequestFilter {
-  private static final Logger logger = LoggerFactory.getLogger(
-      JwtRequestFilter.class.getSimpleName());
 
-  @Autowired
-  private UserDetailsService userDetailsService;
+  private static final Logger logger = LoggerFactory.getLogger(JwtRequestFilter.class);
 
   @Autowired
   private JwtUtil jwtUtil;
 
-  @Override
-  protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
-                                  FilterChain filterChain)
-      throws ServletException, IOException {
-    String jwtToken = getJwtToken(request);
-    String username = jwtToken != null ? getUserNameFrom(jwtToken) : null;
+  @Autowired
+  private UserRepository userRepository;
 
-    if (username != null && notAuthenticatedYet()) {
-      UserDetails userDetails = getUserDetailsFromDatabase(username);
-      if (jwtUtil.validateToken(jwtToken, userDetails)) {
-        registerUserAsAuthenticated(request, userDetails);
+  @Override
+  protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+          throws ServletException, IOException {
+
+    String jwtToken = getJwtToken(request);
+    Integer userId = null;
+
+    if (jwtToken != null) {
+      try {
+        userId = jwtUtil.extractUserId(jwtToken);
+      } catch (Exception e) {
+        logger.warn("Invalid JWT: " + e.getMessage());
+      }
+    }
+
+    if (userId != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+      User user = userRepository.findById(userId).orElse(null);
+      if (user != null) {
+        AccessUserDetails userDetails = new AccessUserDetails(user);
+
+        if (jwtUtil.validateToken(jwtToken, userDetails)) {
+          UsernamePasswordAuthenticationToken authentication =
+                  new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+          authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+          SecurityContextHolder.getContext().setAuthentication(authentication);
+        }
       }
     }
 
     filterChain.doFilter(request, response);
   }
 
-  private UserDetails getUserDetailsFromDatabase(String username) {
-    UserDetails userDetails = null;
-    try {
-      userDetails = userDetailsService.loadUserByUsername(username);
-    } catch (UsernameNotFoundException e) {
-      logger.warn("User " + username + " not found");
-    }
-    return userDetails;
-  }
-
   private String getJwtToken(HttpServletRequest request) {
-    final String authorizationHeader = request.getHeader("Authorization");
-    String jwt = null;
-    if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
-      jwt = stripBearerPrefixFrom(authorizationHeader);
+    final String authHeader = request.getHeader("Authorization");
+    if (authHeader != null && authHeader.startsWith("Bearer ")) {
+      return authHeader.substring(7);
     }
-    return jwt;
-  }
-
-  /**
-   * Strips the "Bearer " prefix from the authorization header value.
-   *
-   * @param authorizationHeaderValue The value of the Authorization HTTP header
-   * @return The JWT token without the "Bearer " prefix
-   */
-  private static String stripBearerPrefixFrom(String authorizationHeaderValue) {
-    final int numberOfCharsToStrip = "Bearer ".length();
-    return authorizationHeaderValue.substring(numberOfCharsToStrip);
-  }
-
-  private String getUserNameFrom(String jwtToken) {
-    String username = null;
-    try{
-      username = jwtUtil.extractUsername(jwtToken);
-    } catch (MalformedJwtException e) {
-      logger.warn("Malformed JWT: " + e.getMessage());
-    } catch (JwtException e) {
-      logger.warn("Error in the JWT token: " + e.getMessage());
-    }
-    return username;
-  }
-
-  private static boolean notAuthenticatedYet() {
-    return SecurityContextHolder.getContext().getAuthentication() == null;
-  }
-
-  private static void registerUserAsAuthenticated(HttpServletRequest request,
-                                                  UserDetails userDetails) {
-    final UsernamePasswordAuthenticationToken upat = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
-    upat.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-    SecurityContextHolder.getContext().setAuthentication(upat);
+    return null;
   }
 }

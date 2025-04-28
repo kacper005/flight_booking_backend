@@ -79,6 +79,12 @@ public class SecurityConfiguration {
                         "/prices/**")
                     .hasAuthority("ROLE_ADMIN")
 
+                        // USER can see and edit their own profile
+                    .requestMatchers(HttpMethod.GET, "/users/me")
+                    .hasAnyAuthority("ROLE_USER", "ROLE_ADMIN")
+                    .requestMatchers(HttpMethod.PUT, "/users/me")
+                    .hasAnyAuthority("ROLE_USER", "ROLE_ADMIN")
+
                     // ADMIN can manage all /users/** endpoints
                     .requestMatchers(HttpMethod.GET,"/users/**")
                     .hasAuthority("ROLE_ADMIN")
