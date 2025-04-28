@@ -53,4 +53,8 @@ public class AccessUserDetails implements UserDetails {
   public Integer getUserId() {
     return user.getUserId();
   }
+
+  public User getUser() {
+    return user;
+  }
 }

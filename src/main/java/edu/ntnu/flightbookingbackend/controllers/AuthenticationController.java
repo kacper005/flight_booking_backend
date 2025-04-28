@@ -1,5 +1,7 @@
 package edu.ntnu.flightbookingbackend.controllers;
 
+import edu.ntnu.flightbookingbackend.model.User;
+import edu.ntnu.flightbookingbackend.security.AccessUserDetails;
 import edu.ntnu.flightbookingbackend.security.AccessUserService;
 import edu.ntnu.flightbookingbackend.security.AuthenticationRequest;
 import edu.ntnu.flightbookingbackend.security.AuthenticationResponse;
@@ -10,7 +12,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -39,8 +43,23 @@ public class AuthenticationController {
     }
 
     final UserDetails userDetails = userDetailsService.loadUserByUsername(request.getUsername());
+
     final String jwt = jwtUtil.generateToken(userDetails);
 
-    return ResponseEntity.ok(new AuthenticationResponse(jwt));
+    AccessUserDetails accessUserDetails = (AccessUserDetails) userDetails;
+    User user = accessUserDetails.getUser();
+
+    return ResponseEntity.ok(new AuthenticationResponse(jwt, user));
   }
+
+  @GetMapping("/me")
+    public ResponseEntity<User> getUserMe() {
+
+        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (userDetails instanceof AccessUserDetails accessUserDetails) {
+        return ResponseEntity.ok(accessUserDetails.getUser());
+        }
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+    }
 }
+

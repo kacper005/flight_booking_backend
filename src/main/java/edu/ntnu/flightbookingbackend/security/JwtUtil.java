@@ -7,6 +7,7 @@ import javax.crypto.SecretKey;
 import java.util.Date;
 import java.util.function.Function;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
@@ -16,21 +17,21 @@ public class JwtUtil {
   private static final String ROLE_KEY = "roles";
   private final SecretKey secretKey;
 
-  public JwtUtil() {
-    this.secretKey = Keys.secretKeyFor(SignatureAlgorithm.HS256);
+  public JwtUtil(@Value("${jwt_secret_key}") String secret) {
+    this.secretKey = Keys.hmacShaKeyFor(secret.getBytes());
   }
 
   public String generateToken(UserDetails userDetails) {
     long timeNow = System.currentTimeMillis();
-    long expirationTime = timeNow + 60 * 60 * 1000; // 1 time
+    long expirationTime = timeNow + 60 * 60 * 1000; // 1 hour
 
     return Jwts.builder()
-            .setSubject(userDetails.getUsername())
-            .claim(ROLE_KEY, userDetails.getAuthorities())
-            .setIssuedAt(new Date(timeNow))
-            .setExpiration(new Date(expirationTime))
-            .signWith(secretKey, SignatureAlgorithm.HS256)
-            .compact();
+        .setSubject(userDetails.getUsername())
+        .claim(ROLE_KEY, userDetails.getAuthorities())
+        .setIssuedAt(new Date(timeNow))
+        .setExpiration(new Date(expirationTime))
+        .signWith(secretKey, SignatureAlgorithm.HS256)
+        .compact();
   }
 
   public String extractUsername(String token) throws JwtException {
