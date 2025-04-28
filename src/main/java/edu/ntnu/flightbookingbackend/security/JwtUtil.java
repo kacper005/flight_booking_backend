@@ -17,7 +17,7 @@ public class JwtUtil {
   private static final String ROLE_KEY = "roles";
   private final SecretKey secretKey;
 
-  public JwtUtil(@Value("${jwt_secret_key}") String secret) {
+  public JwtUtil(@Value("${jwt.secret}") String secret) {
     this.secretKey = Keys.hmacShaKeyFor(secret.getBytes());
   }
 
