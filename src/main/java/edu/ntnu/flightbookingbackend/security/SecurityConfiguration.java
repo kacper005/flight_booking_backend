@@ -117,7 +117,7 @@ public class SecurityConfiguration {
                     .hasAnyAuthority("ROLE_USER", "ROLE_ADMIN")
 
                     // (Optional) Protect admin route
-                    .requestMatchers("/admin/**")
+                    .requestMatchers("/admin")
                     .hasAuthority("ROLE_ADMIN")
                     .requestMatchers("/admin-*")
                     .hasAuthority("ROLE_ADMIN")
