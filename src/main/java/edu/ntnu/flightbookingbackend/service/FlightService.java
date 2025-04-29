@@ -181,20 +181,24 @@ public class FlightService {
         List<Flight> allFlights = (List<Flight>) flightRepository.findAll();
 
         if (!roundTrip) {
-            // One-way flight search
             return allFlights.stream()
                 .filter(f -> f.getDepartureAirport().getCode().equalsIgnoreCase(from))
                 .filter(f -> f.getArrivalAirport().getCode().equalsIgnoreCase(to))
                 .filter(f -> !f.getRoundTrip())
-                .filter(f -> f.getDepartureTime().isAfter(start.minusDays(1)))
+                .filter(f ->
+                    !f.getDepartureTime().isBefore(start) &&
+                        f.getDepartureTime().isBefore(start.plusDays(1))
+                )
                 .collect(Collectors.toList());
         } else {
-            // Round-trip flight search logic
             List<Flight> outboundFlights = allFlights.stream()
                 .filter(f -> f.getRoundTrip())
                 .filter(f -> f.getDepartureAirport().getCode().equalsIgnoreCase(from))
                 .filter(f -> f.getArrivalAirport().getCode().equalsIgnoreCase(to))
-                .filter(f -> f.getDepartureTime().isAfter(start.minusDays(1)))
+                .filter(f ->
+                    !f.getDepartureTime().isBefore(start) &&
+                        f.getDepartureTime().isBefore(start.plusDays(1))
+                )
                 .collect(Collectors.toList());
 
             List<RoundTripFlightDTO> roundTrips = new ArrayList<>();
@@ -205,8 +209,11 @@ public class FlightService {
                         returnFlight.getRoundTrip() &&
                             returnFlight.getDepartureAirport().getCode().equalsIgnoreCase(to) &&
                             returnFlight.getArrivalAirport().getCode().equalsIgnoreCase(from) &&
-                            returnFlight.getDepartureTime().isAfter(outbound.getArrivalTime()) &&
-                            (end == null || returnFlight.getDepartureTime().isBefore(end)) &&
+                            !returnFlight.getDepartureTime().isBefore(outbound.getArrivalTime()) &&
+                            (end == null || (
+                                !returnFlight.getDepartureTime().isBefore(end) &&
+                                    returnFlight.getDepartureTime().isBefore(end.plusDays(1))
+                            )) &&
                             outbound.getAirline().equals(returnFlight.getAirline())
                     )
                     .findFirst()
@@ -216,6 +223,7 @@ public class FlightService {
             return roundTrips;
         }
     }
+
 
 
 
