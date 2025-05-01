@@ -213,8 +213,7 @@ public class FlightService {
                             (end == null || (
                                 !returnFlight.getDepartureTime().isBefore(end) &&
                                     returnFlight.getDepartureTime().isBefore(end.plusDays(1))
-                            )) &&
-                            outbound.getAirline().equals(returnFlight.getAirline())
+                            ))
                     )
                     .findFirst()
                     .ifPresent(returnFlight -> roundTrips.add(new RoundTripFlightDTO(outbound, returnFlight)));
