@@ -1,6 +1,5 @@
 package edu.ntnu.flightbookingbackend.security;
 
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -40,7 +39,8 @@ public class SecurityConfiguration {
   public SecurityFilterChain configure(HttpSecurity http) throws Exception {
     AuthenticationManagerBuilder auth = http.getSharedObject(AuthenticationManagerBuilder.class);
     auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder());
-    http.cors(withDefaults()).csrf(AbstractHttpConfigurer::disable)
+    http.cors(withDefaults())
+        .csrf(AbstractHttpConfigurer::disable)
         .authorizeHttpRequests(
             authz ->
                 authz
@@ -57,7 +57,8 @@ public class SecurityConfiguration {
                     .permitAll()
                     .requestMatchers(HttpMethod.GET, "/flights/return")
                     .permitAll()
-                    .requestMatchers(HttpMethod.GET, "/airports/**", "/airlines/**", "/prices/**", "/flights/**")
+                    .requestMatchers(
+                        HttpMethod.GET, "/airports/**", "/airlines/**", "/prices/**", "/flights/**")
                     .permitAll()
 
                     // ADMIN can manage flights, airports, airlines, prices
@@ -79,27 +80,29 @@ public class SecurityConfiguration {
                         "/prices/**")
                     .hasAuthority("ROLE_ADMIN")
 
-                        // USER can see and edit their own profile
+                    // USER and ADMIN can see and edit their own profile
                     .requestMatchers(HttpMethod.GET, "/users/me")
                     .hasAnyAuthority("ROLE_USER", "ROLE_ADMIN")
                     .requestMatchers(HttpMethod.PUT, "/users/me")
                     .hasAnyAuthority("ROLE_USER", "ROLE_ADMIN")
 
                     // ADMIN can manage all /users/** endpoints
-                    .requestMatchers(HttpMethod.GET,"/users/**")
+                    .requestMatchers(HttpMethod.GET, "/users/**")
                     .hasAuthority("ROLE_ADMIN")
-                    .requestMatchers(HttpMethod.PUT,"/users/**")
+                    .requestMatchers(HttpMethod.PUT, "/users/**")
                     .hasAuthority("ROLE_ADMIN")
-                    .requestMatchers(HttpMethod.DELETE,"/users/**")
+                    .requestMatchers(HttpMethod.DELETE, "/users/**")
                     .hasAuthority("ROLE_ADMIN")
 
                     // Everyone can register
-                    .requestMatchers( HttpMethod.POST, "/users/**").permitAll()
+                    .requestMatchers(HttpMethod.POST, "/users/**")
+                    .permitAll()
 
                     // Feedback:
                     // Everyone can read
                     .requestMatchers(HttpMethod.GET, "/feedback/**")
                     .permitAll()
+
                     // USER or ADMIN can post, update, delete
                     .requestMatchers(HttpMethod.POST, "/feedback/**")
                     .hasAnyAuthority("ROLE_USER", "ROLE_ADMIN")
@@ -114,7 +117,9 @@ public class SecurityConfiguration {
                     .hasAnyAuthority("ROLE_USER", "ROLE_ADMIN")
 
                     // (Optional) Protect admin route
-                    .requestMatchers("/admin/**")
+                    .requestMatchers("/admin")
+                    .hasAuthority("ROLE_ADMIN")
+                    .requestMatchers("/admin-*")
                     .hasAuthority("ROLE_ADMIN")
 
                     // Any other endpoint requires login
