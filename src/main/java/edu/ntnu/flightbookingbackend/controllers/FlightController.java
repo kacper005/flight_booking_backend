@@ -111,11 +111,11 @@ public class FlightController {
         summary = "Add a new flight",
         description = "Add a new flight to the application state"
     )
-    public ResponseEntity<String> add(@RequestBody Flight flight) {
+    public ResponseEntity<Flight> add(@RequestBody Flight flight) {
       try {
-        flightService.add(flight);
+        Flight savedFlight = flightService.add(flight);
         logger.info("Flight added with ID: " + flight.getFlightId());
-        return new ResponseEntity<>(HttpStatus.CREATED);
+        return new ResponseEntity<>(savedFlight, HttpStatus.CREATED);
       } catch (Exception e) {
         logger.error("Failed to add flight: " + e.getMessage());
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);

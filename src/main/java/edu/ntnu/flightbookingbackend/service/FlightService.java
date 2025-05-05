@@ -107,21 +107,21 @@ public class FlightService {
      * @return {@code true} when flight is added, {@code false} on error
      */
     @Operation(summary = "Add a new flight", description = "Add a new flight to the application state")
-    public boolean add(Flight flight) {
+    public Flight add(Flight flight) {
         if (flight == null) {
-            return false;
+            throw new IllegalArgumentException("Flight cannot be null");
         }
 
         if (flight.getFlightId() != null && flightRepository.existsById(flight.getFlightId())) {
-            return false;
+            throw new IllegalArgumentException("Flight with given ID already exists");
         }
 
         if (flight.getPrices() == null) {
             flight.setPrices(new ArrayList<>());
         }
 
-        flightRepository.save(flight);
-        return true;
+
+        return flightRepository.save(flight);
     }
 
 
