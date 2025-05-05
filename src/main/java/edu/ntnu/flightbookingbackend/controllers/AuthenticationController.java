@@ -46,10 +46,7 @@ public class AuthenticationController {
 
     final String jwt = jwtUtil.generateToken((AccessUserDetails) userDetails);
 
-    AccessUserDetails accessUserDetails = (AccessUserDetails) userDetails;
-    User user = accessUserDetails.getUser();
-
-    return ResponseEntity.ok(new AuthenticationResponse(jwt, user));
+    return ResponseEntity.ok(new AuthenticationResponse(jwt));
   }
 
   @GetMapping("/me")
