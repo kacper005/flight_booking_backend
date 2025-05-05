@@ -9,6 +9,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import java.time.LocalDateTime;
 
 @SpringBootApplication
 public class FlightBookingBackendApplication {
@@ -24,13 +25,14 @@ public class FlightBookingBackendApplication {
         User admin = new User();
         admin.setEmail("chuck@gmail.com");
         admin.setPassword(passwordEncoder.encode("Nunchucks2024"));
-        admin.setPhone("99887766");
+        admin.setPhone("+4799887766");
         admin.setFirstName("Chuck");
         admin.setLastName("Norris");
         admin.setDateOfBirth("02.02.1992");
         admin.setCountry("USA");
         admin.setGender("Male");
         admin.setRole(Role.ADMIN);
+        admin.setCreatedAt(LocalDateTime.now());
         userRepository.save(admin);
         System.out.println("Admin user Chuck created.");
       }
@@ -39,13 +41,14 @@ public class FlightBookingBackendApplication {
         User user = new User();
         user.setEmail("dave@gmail.com");
         user.setPassword(passwordEncoder.encode("Dangerous2024"));
-        user.setPhone("98765432");
+        user.setPhone("+4798765432");
         user.setFirstName("Dave");
         user.setLastName("Norman");
         user.setDateOfBirth("01.01.1991");
         user.setCountry("Norway");
         user.setGender("Male");
         user.setRole(Role.USER);
+        user.setCreatedAt(LocalDateTime.now());
         userRepository.save(user);
         System.out.println("Regular user Dave created.");
       }
