@@ -133,10 +133,10 @@ public class FlightService {
      * @return {@code true} if prices were added, {@code false} if flight not found
      */
     @Transactional
-    public boolean addPricesToFlight(Integer flightId, List<Price> prices) {
+    public Flight addPricesToFlight(Integer flightId, List<Price> prices) {
         Optional<Flight> optionalFlight = flightRepository.findById(flightId);
         if (optionalFlight.isEmpty()) {
-            return false;
+            throw new IllegalArgumentException("No flight found with ID: " + flightId);
         }
 
         Flight flight = optionalFlight.get();
@@ -146,8 +146,8 @@ public class FlightService {
             flight.getPrices().add(price);
         }
 
-        flightRepository.save(flight);
-        return true;
+
+        return flightRepository.save(flight);
     }
 
 

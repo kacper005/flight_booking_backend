@@ -5,6 +5,7 @@ import edu.ntnu.flightbookingbackend.model.Flight;
 import edu.ntnu.flightbookingbackend.model.Price;
 import edu.ntnu.flightbookingbackend.service.FlightService;
 import io.swagger.v3.oas.annotations.Operation;
+import java.rmi.NoSuchObjectException;
 import java.time.LocalDateTime;
 import java.util.List;
 import org.slf4j.Logger;
@@ -135,19 +136,17 @@ public class FlightController {
       summary = "Add prices to a flight",
       description = "Attach prices to an existing flight"
   )
-  public ResponseEntity<String> addPricesToFlight(@PathVariable Integer id, @RequestBody
+  public ResponseEntity<Flight> addPricesToFlight(@PathVariable Integer id, @RequestBody
   List<Price> prices) {
     try {
-      boolean success = flightService.addPricesToFlight(id, prices);
-      if (success) {
-        logger.info("Prices added to flight ID: " + id);
-        return new ResponseEntity<>("Prices added successfully", HttpStatus.OK);
-      } else {
-        return new ResponseEntity<>("Flight not found", HttpStatus.NOT_FOUND);
-      }
+      Flight savedPriceToFlight = flightService.addPricesToFlight(id, prices);
+      logger.info("Prices added to flight ID: " + id);
+      return new ResponseEntity<>(savedPriceToFlight, HttpStatus.OK);
+    } catch (IllegalArgumentException ie){
+      return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
     } catch (Exception e) {
       logger.error("Failed to add prices: " + e.getMessage());
-      return new ResponseEntity<>("Failed to add prices", HttpStatus.BAD_REQUEST);
+      return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
     }
   }
 
