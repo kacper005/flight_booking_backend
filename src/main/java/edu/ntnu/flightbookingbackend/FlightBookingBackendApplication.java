@@ -29,7 +29,7 @@ public class FlightBookingBackendApplication {
         admin.setFirstName("Chuck");
         admin.setLastName("Norris");
         admin.setDateOfBirth("02.02.1992");
-        admin.setCountry("USA");
+        admin.setCountry("United States");
         admin.setGender("Male");
         admin.setRole(Role.ADMIN);
         admin.setCreatedAt(LocalDateTime.now());
