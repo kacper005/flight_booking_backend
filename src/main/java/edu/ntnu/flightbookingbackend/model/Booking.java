@@ -32,7 +32,6 @@ public class Booking {
   private String bookingDate;
   @ManyToOne
   @JoinColumn(name = "user_id", nullable = true)
-  @JsonBackReference
   private User user;
   @ManyToMany(fetch = FetchType.EAGER)
   @JoinTable(
