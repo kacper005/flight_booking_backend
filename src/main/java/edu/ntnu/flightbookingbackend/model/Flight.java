@@ -3,17 +3,27 @@ package edu.ntnu.flightbookingbackend.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import edu.ntnu.flightbookingbackend.enums.FlightStatus;
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
+import jakarta.persistence.ManyToOne;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Represents a flight entity in the flight booking system.
- */
-
+/** Represents a flight entity in the flight booking system. */
 @Entity
-@Schema(description = "Represents a flight with details such as airline, departure, arrival, and status.")
+@Schema(
+    description =
+        "Represents a flight with details such as airline, departure, arrival, and status.")
 public class Flight {
 
   @Id
@@ -49,10 +59,14 @@ public class Flight {
   @Schema(description = "Whether the flight is a round trip or not.", example = "true")
   private boolean roundTrip;
 
-  @Schema(description = "List of extra features available on the flight.", example = "[\"WiFi\", \"In-seat Power\", \"Extra Legroom\"]")
+  @Schema(
+      description = "List of extra features available on the flight.",
+      example = "[\"WiFi\", \"In-seat Power\", \"Extra Legroom\"]")
   private String extraFeatures;
 
-  @Schema(description = "List of available classes on the flight", example = "[\"Economy\", \"Business\", \"First Class\"]")
+  @Schema(
+      description = "List of available classes on the flight",
+      example = "[\"Economy\", \"Business\", \"First Class\"]")
   private String availableClasses;
 
   @Enumerated(EnumType.STRING)
@@ -67,14 +81,11 @@ public class Flight {
   @JoinTable(
       name = "flight_price",
       joinColumns = @JoinColumn(name = "flight_id"),
-      inverseJoinColumns = @JoinColumn(name = "price_id")
-  )
+      inverseJoinColumns = @JoinColumn(name = "price_id"))
   private List<Price> prices = new ArrayList<>();
 
-
-
-  public Flight() {
-  }
+  /** Default constructor. */
+  public Flight() {}
 
   public Integer getFlightId() {
     return flightId;
@@ -172,11 +183,21 @@ public class Flight {
     this.bookings = booking;
   }
 
+  /**
+   * Adds a booking to the flight and sets the flight in the booking.
+   *
+   * @param booking The booking to be added.
+   */
   public void addBooking(Booking booking) {
     this.bookings.add(booking);
     booking.getFlights().add(this);
   }
 
+  /**
+   * Removes a booking from the flight and sets the flight in the booking to null.
+   *
+   * @param booking The booking to be removed.
+   */
   public void removeBooking(Booking booking) {
     this.bookings.remove(booking);
     booking.getFlights().remove(this);
@@ -190,11 +211,21 @@ public class Flight {
     this.prices = priceList;
   }
 
+  /**
+   * Adds a price to the flight and sets the flight in the price.
+   *
+   * @param price The price to be added.
+   */
   public void addPrice(Price price) {
     this.prices.add(price);
     price.getFlights().add(this);
   }
 
+  /**
+   * Removes a price from the flight and sets the flight in the price to null.
+   *
+   * @param price The price to be removed.
+   */
   public void removePrice(Price price) {
     this.prices.remove(price);
     price.getFlights().remove(this);

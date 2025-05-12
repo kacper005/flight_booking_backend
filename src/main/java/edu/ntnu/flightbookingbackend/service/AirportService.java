@@ -3,28 +3,25 @@ package edu.ntnu.flightbookingbackend.service;
 import edu.ntnu.flightbookingbackend.model.Airport;
 import edu.ntnu.flightbookingbackend.repository.AirportRepository;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-/**
- * Business logic related to airports.
- */
-
+/** Business logic related to airports. */
 @Service
 @Tag(name = "Airport Service", description = "Business logic related to airports")
 public class AirportService {
-  @Autowired
-  private AirportRepository airportRepository;
+  @Autowired private AirportRepository airportRepository;
 
   /**
    * Get all airports from the application state.
    *
    * @return A list of airports, empty list if there are none
    */
-  @Operation(summary = "Get all airports", description = "Get all airports from the application state")
+  @Operation(
+      summary = "Get all airports",
+      description = "Get all airports from the application state")
   public Iterable<Airport> getAll() {
     return airportRepository.findAll();
   }
@@ -35,8 +32,10 @@ public class AirportService {
    * @param id ID of the airport to find
    * @return The airport or null if none found by the given ID
    */
-  @Operation(summary = "Find airport by ID", description = "Fetches an airport based on the provided ID")
-  public Airport findByID(int id) {
+  @Operation(
+      summary = "Find airport by ID",
+      description = "Fetches an airport based on the provided ID")
+  public Airport findById(int id) {
     Optional<Airport> airport = airportRepository.findById(id);
     return airport.orElse(null);
   }
@@ -47,7 +46,9 @@ public class AirportService {
    * @param airport Airport to persist
    * @return {@code true} when airport is added, {@code false} on error
    */
-  @Operation(summary = "Add a new airport", description = "Add a new airport to the application state")
+  @Operation(
+      summary = "Add a new airport",
+      description = "Add a new airport to the application state")
   public boolean add(Airport airport) {
     boolean added = false;
     boolean airportExists = false;
@@ -72,14 +73,15 @@ public class AirportService {
    * Update an airport in the application state (persist in the database).
    *
    * @param airportId ID of the airport to update
-   * @param airport   Airport data to update
+   * @param airport Airport data to update
    * @return {@code true} when airport is updated, {@code false} on error
    */
-
-  @Operation(summary = "Update an airport", description = "Update an airport in the application state")
+  @Operation(
+      summary = "Update an airport",
+      description = "Update an airport in the application state")
   public String update(int airportId, Airport airport) {
     String errorMessage = null;
-    Airport existingAirport = findByID(airportId);
+    Airport existingAirport = findById(airportId);
     if (existingAirport == null) {
       errorMessage = "No airport with ID " + airportId + " found.";
     } else if (airport == null) {
@@ -99,9 +101,11 @@ public class AirportService {
    *
    * @param airportId ID of the airport to delete
    * @return {@code true} when airport is deleted, {@code false} when airport was not found in the
-   * database
+   *     database
    */
-  @Operation(summary = "Remove an airport", description = "Remove an airport from the application state")
+  @Operation(
+      summary = "Remove an airport",
+      description = "Remove an airport from the application state")
   public boolean remove(int airportId) {
     Optional<Airport> airport = airportRepository.findById(airportId);
     if (airport.isPresent()) {
@@ -110,10 +114,9 @@ public class AirportService {
     return airport.isPresent();
   }
 
-  /**
-   * Removes all airports from the application state (database).
-   */
-  @Operation(summary = "Removes all airports",
+  /** Removes all airports from the application state (database). */
+  @Operation(
+      summary = "Removes all airports",
       description = "Removes all airports from the application state")
   public void removeAll() {
     airportRepository.deleteAll();

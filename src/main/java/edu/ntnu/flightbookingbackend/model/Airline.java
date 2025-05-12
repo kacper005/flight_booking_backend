@@ -1,8 +1,13 @@
 package edu.ntnu.flightbookingbackend.model;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 
+/** Represents an airline company. */
 @Entity
 @Schema(description = "Represents an airline company.")
 public class Airline {
@@ -27,9 +32,8 @@ public class Airline {
   @Schema(description = "Filename of the airline's logo.", example = "norwegian.png")
   private String logoFileName;
 
-
-  public Airline() {
-  }
+  /** Default constructor. */
+  public Airline() {}
 
   public Integer getAirlineId() {
     return airlineId;
@@ -71,4 +75,3 @@ public class Airline {
     this.logoFileName = logoFileName;
   }
 }
-

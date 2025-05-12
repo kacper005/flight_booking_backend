@@ -16,20 +16,25 @@ import org.springframework.security.web.authentication.WebAuthenticationDetailsS
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
+/**
+ * JWT Request Filter for validating JWT tokens in incoming requests.
+ *
+ * <p>This filter checks for the presence of a JWT token in the request header, validates it, and
+ * sets the authentication context if valid.
+ */
 @Component
 public class JwtRequestFilter extends OncePerRequestFilter {
 
   private static final Logger logger = LoggerFactory.getLogger(JwtRequestFilter.class);
 
-  @Autowired
-  private JwtUtil jwtUtil;
+  @Autowired private JwtUtil jwtUtil;
 
-  @Autowired
-  private UserRepository userRepository;
+  @Autowired private UserRepository userRepository;
 
   @Override
-  protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
-          throws ServletException, IOException {
+  protected void doFilterInternal(
+      HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+      throws ServletException, IOException {
 
     String jwtToken = getJwtToken(request);
     Integer userId = null;
@@ -49,7 +54,8 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 
         if (jwtUtil.validateToken(jwtToken, userDetails)) {
           UsernamePasswordAuthenticationToken authentication =
-                  new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+              new UsernamePasswordAuthenticationToken(
+                  userDetails, null, userDetails.getAuthorities());
           authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
           SecurityContextHolder.getContext().setAuthentication(authentication);
         }

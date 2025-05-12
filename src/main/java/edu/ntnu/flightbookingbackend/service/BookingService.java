@@ -13,24 +13,21 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-/**
- * Business logic related to bookings.
- */
+/** Business logic related to bookings. */
 @Service
 @Tag(name = "Booking Service", description = "Business logic related to bookings")
 public class BookingService {
-  @Autowired
-  private BookingRepository bookingRepository;
+  @Autowired private BookingRepository bookingRepository;
 
-  @Autowired
-  private FlightRepository flightRepository;
+  @Autowired private FlightRepository flightRepository;
 
   /**
    * Get all bookings from the application state.
    *
    * @return A list of bookings, empty list if there are none
    */
-  @Operation(summary = "Get all bookings",
+  @Operation(
+      summary = "Get all bookings",
       description = "Get all bookings from the application state")
   public Iterable<Booking> getAll() {
     return bookingRepository.findAll();
@@ -42,9 +39,10 @@ public class BookingService {
    * @param id ID of the booking to find
    * @return The booking or null if none found by the given ID
    */
-  @Operation(summary = "Find booking by ID",
+  @Operation(
+      summary = "Find booking by ID",
       description = "Fetches a booking based on the provided ID")
-  public Booking findByID(int id) {
+  public Booking findById(int id) {
     Optional<Booking> booking = bookingRepository.findById(id);
     return booking.orElse(null);
   }
@@ -55,24 +53,25 @@ public class BookingService {
    * @param booking Booking to persist
    * @return {@code true} when booking is added, {@code false} on error
    */
-    @Operation(summary = "Add a new booking",
-        description = "Add a new booking to the application state")
-    public boolean add(Booking booking) {
-      if (booking == null) {
-        return false;
-      }
-
-      if (booking.getBookingId() != null && bookingRepository.existsById(booking.getBookingId())) {
-        return false;
-      }
-
-      if (booking.getFlights() == null) {
-        booking.setFlights(new ArrayList<>());
-      }
-
-      bookingRepository.save(booking);
-      return true;
+  @Operation(
+      summary = "Add a new booking",
+      description = "Add a new booking to the application state")
+  public boolean add(Booking booking) {
+    if (booking == null) {
+      return false;
     }
+
+    if (booking.getBookingId() != null && bookingRepository.existsById(booking.getBookingId())) {
+      return false;
+    }
+
+    if (booking.getFlights() == null) {
+      booking.setFlights(new ArrayList<>());
+    }
+
+    bookingRepository.save(booking);
+    return true;
+  }
 
   /**
    * Add flight to an existing booking.
@@ -108,7 +107,8 @@ public class BookingService {
    * @param booking Booking data to update
    * @return Null on success, error message on error
    */
-  @Operation(summary = "Update a booking",
+  @Operation(
+      summary = "Update a booking",
       description = "Update the details of a booking in the application state")
   public String update(int bookingId, Booking booking) {
     if (booking == null) {
@@ -119,7 +119,7 @@ public class BookingService {
       return "Booking ID does not match the ID in JSON data (response body).";
     }
 
-    Booking existingBooking = findByID(bookingId);
+    Booking existingBooking = findById(bookingId);
     if (existingBooking == null) {
       return "No booking with id " + bookingId + " found.";
     }
@@ -132,57 +132,51 @@ public class BookingService {
     return null;
   }
 
-
-
   /**
    * Remove a booking from the application state (database).
    *
-   * @param bookingID ID of the booking to delete
+   * @param bookingId ID of the booking to delete
    * @return {@code true} when booking is deleted, {@code false} when booking was not found in the
-   * database
+   *     database
    */
-  @Operation(summary = "Remove a booking",
+  @Operation(
+      summary = "Remove a booking",
       description = "Remove a booking from the application state")
-  public boolean remove(int bookingID) {
-    Optional<Booking> booking = bookingRepository.findById(bookingID);
+  public boolean remove(int bookingId) {
+    Optional<Booking> booking = bookingRepository.findById(bookingId);
     if (booking.isPresent()) {
       bookingRepository.delete(booking.get());
     }
     return booking.isPresent();
   }
 
-
   /**
    * Get the number of bookings in the database.
    *
    * @return The total number of bookings stored in the database
    */
-  @Operation(summary = "Get the number of bookings",
+  @Operation(
+      summary = "Get the number of bookings",
       description = "Get the total number of bookings stored in the database")
   public long getCount() {
     return bookingRepository.count();
   }
 
-
-    /**
-     * Check if a booking exists in the database.
-     *
-     * @param bookingId ID of the booking to check
-     * @return {@code true} if the booking exists, {@code false} otherwise
-     */
+  /**
+   * Check if a booking exists in the database.
+   *
+   * @param bookingId ID of the booking to check
+   * @return {@code true} if the booking exists, {@code false} otherwise
+   */
   public boolean bookingExists(int bookingId) {
     return bookingRepository.existsById(bookingId);
   }
 
-  /**
-   * Removes all bookings from the application state (database).
-   */
-  @Operation(summary = "Removes all bookings",
+  /** Removes all bookings from the application state (database). */
+  @Operation(
+      summary = "Removes all bookings",
       description = "Removes all bookings from the application state")
   public void removeAll() {
     bookingRepository.deleteAll();
   }
-
 }
-
-

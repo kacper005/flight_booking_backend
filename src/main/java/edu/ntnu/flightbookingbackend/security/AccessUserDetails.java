@@ -7,9 +7,21 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+/**
+ * Custom implementation of Spring Security's UserDetails interface for managing user authentication
+ * and authorization.
+ *
+ * <p>This class wraps a User object and provides the necessary methods to retrieve user details,
+ * such as username, password, and authorities (roles).
+ */
 public class AccessUserDetails implements UserDetails {
   private final User user;
 
+  /**
+   * Constructs an AccessUserDetails object with the specified User.
+   *
+   * @param user The User object containing user information.
+   */
   public AccessUserDetails(User user) {
     this.user = user;
   }

@@ -1,5 +1,7 @@
 package edu.ntnu.flightbookingbackend.security;
 
+import static org.springframework.security.config.Customizer.withDefaults;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -15,7 +17,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import static org.springframework.security.config.Customizer.withDefaults;
 
 /**
  * Creates AuthenticationManager - set up authentication type. The @EnableMethodSecurity is needed
@@ -132,12 +133,24 @@ public class SecurityConfiguration {
     return http.build();
   }
 
+  /**
+   * Authentication manager bean for managing authentication.
+   *
+   * @param config AuthenticationConfiguration instance
+   * @return AuthenticationManager instance
+   * @throws Exception if an error occurs
+   */
   @Bean
   public AuthenticationManager authenticationManager(AuthenticationConfiguration config)
       throws Exception {
     return config.getAuthenticationManager();
   }
 
+  /**
+   * Password encoder bean for encoding passwords.
+   *
+   * @return PasswordEncoder instance
+   */
   @Bean
   public PasswordEncoder passwordEncoder() {
     return new BCryptPasswordEncoder();

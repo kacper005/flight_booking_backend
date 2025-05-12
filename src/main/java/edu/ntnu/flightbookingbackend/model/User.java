@@ -1,47 +1,62 @@
 package edu.ntnu.flightbookingbackend.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import edu.ntnu.flightbookingbackend.cryptography.CryptoConverter;
 import edu.ntnu.flightbookingbackend.enums.Role;
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.persistence.*;
-
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * A user of the system. Entity class.
- */
+/** A user of the system. Entity class. */
 @Entity
 @Schema(description = "A user of the system")
 public class User {
   public static Object Role;
+
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name = "user_id")
   @Schema(description = "The id of the user")
   private Integer userId;
+
   @Column(unique = true, nullable = false)
   @Schema(description = "The email of the user")
   private String email;
-//  @Convert(converter = CryptoConverter.class)
+
+  //  @Convert(converter = CryptoConverter.class)
   @Schema(description = "The password of the user")
   private String password;
+
   @Schema(description = "The phone number of the user")
   private String phone;
+
   @Schema(description = "The first name of the user")
   private String firstName;
+
   @Schema(description = "The last name of the user")
   private String lastName;
+
   @Schema(description = "The date of birth of the user")
   private String dateOfBirth;
+
   @Schema(description = "The country of residence of the user")
   private String country;
+
   @Schema(description = "The gender of the user")
   private String gender;
+
   @Enumerated(EnumType.STRING)
   private Role role;
+
   @Schema(description = "The date the user was created")
   @Column(updatable = false)
   private LocalDateTime createdAt;
@@ -54,9 +69,8 @@ public class User {
   @JsonIgnore
   private List<Feedback> feedback = new ArrayList<>();
 
-
-  public User() {
-  }
+  /** Default constructor. */
+  public User() {}
 
   public Integer getUserId() {
     return userId;
@@ -138,7 +152,6 @@ public class User {
     this.role = role;
   }
 
-
   public LocalDateTime getCreatedAt() {
     return createdAt;
   }
@@ -148,18 +161,18 @@ public class User {
   }
 
   public List<Booking> getBookings() {
-        return bookings;
+    return bookings;
   }
 
   public void setBookings(List<Booking> bookings) {
-        this.bookings = bookings;
+    this.bookings = bookings;
   }
 
   public List<Feedback> getFeedback() {
-        return feedback;
+    return feedback;
   }
 
-    public void setFeedback(List<Feedback> feedback) {
-            this.feedback = feedback;
-    }
+  public void setFeedback(List<Feedback> feedback) {
+    this.feedback = feedback;
+  }
 }

@@ -8,7 +8,6 @@ import io.swagger.v3.oas.annotations.Operation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.neo4j.Neo4jProperties;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -21,16 +20,13 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-/**
- * REST API controller for the User entity.
- */
+/** REST API controller for the User entity. */
 @RestController
 @RequestMapping("/users")
 public class UserController {
   private static Logger logger = LoggerFactory.getLogger(UserController.class);
 
-  @Autowired
-  private UserService userService;
+  @Autowired private UserService userService;
 
   /**
    * Get all users.
@@ -40,8 +36,7 @@ public class UserController {
   @GetMapping
   @Operation(
       summary = "Get all users",
-      description = "Returns a list of all users currently stored in the application state"
-  )
+      description = "Returns a list of all users currently stored in the application state")
   public Iterable<User> getAll() {
     return userService.getAll();
   }
@@ -53,13 +48,10 @@ public class UserController {
    * @return User with the given ID or status 404
    */
   @GetMapping("/{id}")
-  @Operation(
-      summary = "Get user by ID",
-      description = "Fetches a user based on the provided ID"
-  )
+  @Operation(summary = "Get user by ID", description = "Fetches a user based on the provided ID")
   public ResponseEntity<User> getUserById(@PathVariable Integer id) {
     ResponseEntity<User> response;
-    User user = userService.findByID(id);
+    User user = userService.findById(id);
 
     if (user != null) {
       response = new ResponseEntity<>(user, HttpStatus.OK);
@@ -77,10 +69,7 @@ public class UserController {
    * @return Status code 201 if successful, 400 if failed
    */
   @PostMapping()
-  @Operation(
-      summary = "Add a new user",
-      description = "Add a new user to the application state"
-  )
+  @Operation(summary = "Add a new user", description = "Add a new user to the application state")
   public ResponseEntity<String> add(@RequestBody User user) {
     ResponseEntity<String> response;
 
@@ -89,12 +78,27 @@ public class UserController {
       logger.info("User added.");
       response = new ResponseEntity<>(HttpStatus.CREATED);
     } catch (Exception e) {
-      response = new ResponseEntity<>(e.getMessage(),
-          HttpStatus.BAD_REQUEST);
-      logger.error("Failed to add user: " + " " + user.getEmail() + " " +
-          user.getPhone() + " " + user.getFirstName() + " " + user.getLastName() + " " +
-          user.getDateOfBirth() + " " + user.getCountry() + " " + user.getGender() + " " +
-          user.getRole() + " " + user.getCreatedAt());
+      response = new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+      logger.error(
+          "Failed to add user: "
+              + " "
+              + user.getEmail()
+              + " "
+              + user.getPhone()
+              + " "
+              + user.getFirstName()
+              + " "
+              + user.getLastName()
+              + " "
+              + user.getDateOfBirth()
+              + " "
+              + user.getCountry()
+              + " "
+              + user.getGender()
+              + " "
+              + user.getRole()
+              + " "
+              + user.getCreatedAt());
     }
     return response;
   }
@@ -108,8 +112,7 @@ public class UserController {
   @DeleteMapping("/{id}")
   @Operation(
       summary = "Delete a user",
-      description = "Delete a user with a given ID from the application state"
-  )
+      description = "Delete a user with a given ID from the application state")
   public ResponseEntity<String> delete(@PathVariable Integer id) {
     ResponseEntity<String> response;
 
@@ -133,16 +136,16 @@ public class UserController {
   @DeleteMapping("/all")
   @Operation(
       summary = "Delete all users",
-      description = "Delete all users from the application state"
-  )
+      description = "Delete all users from the application state")
   public ResponseEntity<String> deleteAll() {
     ResponseEntity<String> response;
     try {
       userService.removeAll();
       response = new ResponseEntity<>(HttpStatus.OK);
     } catch (Exception e) {
-      response = new ResponseEntity<>("Failed to remove all users: " + e.getMessage(),
-          HttpStatus.BAD_REQUEST);
+      response =
+          new ResponseEntity<>(
+              "Failed to remove all users: " + e.getMessage(), HttpStatus.BAD_REQUEST);
     }
     return response;
   }
@@ -150,15 +153,14 @@ public class UserController {
   /**
    * Update a user in the application state.
    *
-   * @param id   ID of the user to update
+   * @param id ID of the user to update
    * @param user User data to update
    * @return 200 OK on success, 400 Bad request on error
    */
   @PutMapping("/{id}")
   @Operation(
       summary = "Update a user",
-      description = "Update the details of a user in the application state"
-  )
+      description = "Update the details of a user in the application state")
   public ResponseEntity<String> update(@PathVariable Integer id, @RequestBody User user) {
     ResponseEntity<String> response;
     String errorMessage = userService.update(id, user);
@@ -170,56 +172,60 @@ public class UserController {
     return response;
   }
 
+  /**
+   * Deletes all users from the application state, excluding those with the ADMIN role.
+   *
+   * @return 200 OK on success, 400 Bad request on error
+   */
   @DeleteMapping
   public ResponseEntity<String> deleteAllExceptAdmin() {
     Iterable<User> users = userService.getAll();
     int deletedCount = 0;
 
     for (User user : users) {
-      // Ikke slett brukere med rollen ADMIN
+      // Don't delete users with the ADMIN role
       if (user.getRole() != Role.ADMIN) {
         userService.remove(user.getUserId());
         deletedCount++;
       }
     }
-
     return ResponseEntity.ok("Deleted " + deletedCount + " users (excluding admins).");
   }
 
   /**
    * Get the logged-in user's profile.
-   * @param authentication
-   * @return
+   *
+   * @param authentication Authentication object containing user details
+   * @return ResponseEntity with user information or 404 if not found
    */
   @GetMapping("/me")
   @Operation(
-          summary = "Get your own user information",
-          description = "Fetches the currently authenticated user's information"
-  )
+      summary = "Get your own user information",
+      description = "Fetches the currently authenticated user's information")
   public ResponseEntity<User> getOwnProfile(Authentication authentication) {
     AccessUserDetails userDetails = (AccessUserDetails) authentication.getPrincipal();
     Integer loggedInUserId = userDetails.getUserId();
 
-    User user = userService.findByID(loggedInUserId);
+    User user = userService.findById(loggedInUserId);
     if (user == null) {
       return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
     return new ResponseEntity<>(user, HttpStatus.OK);
   }
 
-
   /**
    * Update the logged-in user's profile.
-   * @param updatedUser
-   * @param authentication
-   * @return
+   *
+   * @param updatedUser The updated user information
+   * @param authentication Authentication object containing user details
+   * @return ResponseEntity with status 200 OK or 400 Bad Request
    */
   @PutMapping("/me")
-  @Operation (
+  @Operation(
       summary = "Update your own profile",
-      description = "Allows a user to update their own profile information"
-  )
-  public ResponseEntity<String> updateProfile(@RequestBody User updatedUser, Authentication authentication) {
+      description = "Allows a user to update their own profile information")
+  public ResponseEntity<String> updateProfile(
+      @RequestBody User updatedUser, Authentication authentication) {
     AccessUserDetails userDetails = (AccessUserDetails) authentication.getPrincipal();
     Integer loggedInUserId = userDetails.getUserId();
 
@@ -227,8 +233,7 @@ public class UserController {
     if (errorMessage == null) {
       return new ResponseEntity<>(HttpStatus.OK);
     } else {
-        return new ResponseEntity<>(errorMessage, HttpStatus.BAD_REQUEST);
+      return new ResponseEntity<>(errorMessage, HttpStatus.BAD_REQUEST);
     }
   }
-
 }

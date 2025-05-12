@@ -9,9 +9,7 @@ import javax.crypto.spec.SecretKeySpec;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/**
- * Converter for encrypting and decrypting data in the database.
- */
+/** Converter for encrypting and decrypting data in the database. */
 @Converter
 public class CryptoConverter implements AttributeConverter<String, String> {
 

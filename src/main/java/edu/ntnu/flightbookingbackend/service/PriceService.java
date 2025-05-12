@@ -37,7 +37,7 @@ public class PriceService {
    * @param id ID of the price to find
    * @return The price or null if none found by the given ID
    */
-  public Price findByID(int id) {
+  public Price findById(int id) {
     Optional<Price> price = priceRepository.findById(id);
     return price.orElse(null);
   }
@@ -61,7 +61,7 @@ public class PriceService {
 
 
     boolean flightExists = price.getFlights() != null && price.getFlights().stream()
-        .allMatch(flight -> flightService.findByID(flight.getFlightId()) != null);
+        .allMatch(flight -> flightService.findById(flight.getFlightId()) != null);
 
     if (!flightExists) {
       throw new IllegalArgumentException("One or more associated flights do not exist");
@@ -97,7 +97,7 @@ public class PriceService {
       description = "Update the details of a price in the application state")
   public String update(int priceId, Price price) {
     String errorMessage = null;
-    Price existingPrice = findByID(priceId);
+    Price existingPrice = findById(priceId);
     FlightService flightService = new FlightService();
     if (existingPrice == null) {
       errorMessage = "No price with id " + priceId + " found";
@@ -108,7 +108,7 @@ public class PriceService {
     }
 
     for (Flight f : price.getFlights()) {
-      if (flightService.findByID(f.getFlightId()) == null) {
+      if (flightService.findById(f.getFlightId()) == null) {
         errorMessage = "Flight with ID " + f.getFlightId() + " does not exist.";
       }
     }

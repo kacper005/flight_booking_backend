@@ -17,16 +17,13 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-/**
- * REST API controller for the Airline entity.
- */
+/** REST API controller for the Airline entity. */
 @RestController
 @RequestMapping("/airlines")
 public class AirlineController {
   private static Logger logger = LoggerFactory.getLogger(AirlineController.class);
 
-  @Autowired
-  private AirlineService airlineService;
+  @Autowired private AirlineService airlineService;
 
   /**
    * Get all airlines.
@@ -36,8 +33,7 @@ public class AirlineController {
   @GetMapping
   @Operation(
       summary = "Get all airlines",
-      description = "Returns a list of all airlines currently stored in the application state"
-  )
+      description = "Returns a list of all airlines currently stored in the application state")
   public Iterable<Airline> getAll() {
     return airlineService.getAll();
   }
@@ -51,11 +47,10 @@ public class AirlineController {
   @GetMapping("/{id}")
   @Operation(
       summary = "Get airline by ID",
-      description = "Fetches an airline based on the provided ID"
-  )
+      description = "Fetches an airline based on the provided ID")
   public ResponseEntity<Airline> getAirlineById(@PathVariable Integer id) {
     ResponseEntity<Airline> response;
-    Airline airline = airlineService.findByID(id);
+    Airline airline = airlineService.findById(id);
 
     if (airline != null) {
       response = new ResponseEntity<>(airline, HttpStatus.OK);
@@ -74,8 +69,7 @@ public class AirlineController {
   @PostMapping()
   @Operation(
       summary = "Add a new airline",
-      description = "Add a new airline to the application state"
-  )
+      description = "Add a new airline to the application state")
   public ResponseEntity<String> add(@RequestBody Airline airline) {
     ResponseEntity<String> response;
 
@@ -84,10 +78,17 @@ public class AirlineController {
       logger.info("Airline added.");
       response = new ResponseEntity<>(HttpStatus.CREATED);
     } catch (Exception e) {
-      response = new ResponseEntity<>("Failed to add airline: " + e.getMessage(),
-          HttpStatus.BAD_REQUEST);
-      logger.error("Failed to add airline: " + airline.getAirlineId() + " " + airline.getName() +
-          " " + airline.getCode() + " " + airline.getCountry());
+      response =
+          new ResponseEntity<>("Failed to add airline: " + e.getMessage(), HttpStatus.BAD_REQUEST);
+      logger.error(
+          "Failed to add airline: "
+              + airline.getAirlineId()
+              + " "
+              + airline.getName()
+              + " "
+              + airline.getCode()
+              + " "
+              + airline.getCountry());
     }
     return response;
   }
@@ -101,8 +102,7 @@ public class AirlineController {
   @DeleteMapping("/{id}")
   @Operation(
       summary = "Delete an airline",
-      description = "Delete an airline with a given ID from the application state"
-  )
+      description = "Delete an airline with a given ID from the application state")
   public ResponseEntity<String> delete(@PathVariable Integer id) {
     ResponseEntity<String> response;
 
@@ -126,8 +126,7 @@ public class AirlineController {
   @DeleteMapping("/all")
   @Operation(
       summary = "Delete all airlines",
-      description = "Delete all airlines from the application state"
-  )
+      description = "Delete all airlines from the application state")
   public ResponseEntity<String> deleteAll() {
     ResponseEntity<String> response;
 
@@ -135,17 +134,24 @@ public class AirlineController {
       airlineService.removeAll();
       response = new ResponseEntity<>(HttpStatus.OK);
     } catch (Exception e) {
-      response = new ResponseEntity<>("Failed to remove all airlines: " + e.getMessage(),
-          HttpStatus.BAD_REQUEST);
+      response =
+          new ResponseEntity<>(
+              "Failed to remove all airlines: " + e.getMessage(), HttpStatus.BAD_REQUEST);
     }
     return response;
   }
 
+  /**
+   * Update an airline in the application state.
+   *
+   * @param id ID of the airline to update
+   * @param airline Airline data to update
+   * @return 200 OK on success, 400 Bad request on error
+   */
   @PutMapping("/{id}")
   @Operation(
       summary = "Update an airline",
-      description = "Update the details of an airline in the application state"
-  )
+      description = "Update the details of an airline in the application state")
   public ResponseEntity<String> update(@PathVariable Integer id, @RequestBody Airline airline) {
     ResponseEntity<String> response;
     String errorMessage = airlineService.update(id, airline);

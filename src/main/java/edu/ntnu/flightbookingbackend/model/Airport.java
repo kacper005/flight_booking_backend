@@ -1,12 +1,13 @@
 package edu.ntnu.flightbookingbackend.model;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 
-/**
- * Represents an airport.
- */
-
+/** Represents an airport. */
 @Entity
 @Schema(description = "Represents an airport.")
 public class Airport {
@@ -30,9 +31,8 @@ public class Airport {
   @Schema(description = "Country where the airport is located.", example = "Norway")
   private String country;
 
-
-  public Airport() {
-  }
+  /** Default constructor. */
+  public Airport() {}
 
   public Integer getAirportId() {
     return airportId;
@@ -73,6 +73,4 @@ public class Airport {
   public void setCountry(String country) {
     this.country = country;
   }
-
 }
-

@@ -17,16 +17,13 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-/**
- * REST API controller for the Airport entity.
- */
+/** REST API controller for the Airport entity. */
 @RestController
 @RequestMapping("/airports")
 public class AirportController {
   private static Logger logger = LoggerFactory.getLogger(AirportController.class);
 
-  @Autowired
-  private AirportService airportService;
+  @Autowired private AirportService airportService;
 
   /**
    * Get all airports.
@@ -36,8 +33,7 @@ public class AirportController {
   @GetMapping
   @Operation(
       summary = "Get all airports",
-      description = "Returns a list of all airports currently stored in the application state"
-  )
+      description = "Returns a list of all airports currently stored in the application state")
   public Iterable<Airport> getAll() {
     return airportService.getAll();
   }
@@ -51,11 +47,10 @@ public class AirportController {
   @GetMapping("/{id}")
   @Operation(
       summary = "Get airport by ID",
-      description = "Fetches an airport based on the provided ID"
-  )
+      description = "Fetches an airport based on the provided ID")
   public ResponseEntity<Airport> getAirportById(@PathVariable Integer id) {
     ResponseEntity<Airport> response;
-    Airport airport = airportService.findByID(id);
+    Airport airport = airportService.findById(id);
 
     if (airport != null) {
       response = new ResponseEntity<>(airport, HttpStatus.OK);
@@ -75,8 +70,7 @@ public class AirportController {
   @PostMapping()
   @Operation(
       summary = "Add a new airport",
-      description = "Add a new airport to the application state"
-  )
+      description = "Add a new airport to the application state")
   public ResponseEntity<String> add(@RequestBody Airport airport) {
     ResponseEntity<String> response;
 
@@ -85,10 +79,19 @@ public class AirportController {
       logger.info("Airport added.");
       response = new ResponseEntity<>(HttpStatus.CREATED);
     } catch (Exception e) {
-      response = new ResponseEntity<>("Failed to add airport: " + e.getMessage(),
-          HttpStatus.BAD_REQUEST);
-      logger.error("Failed to add airport: " + airport.getAirportId() + " " + airport.getName() +
-          " " + airport.getCode() + " " + airport.getCity() + " " + airport.getCountry());
+      response =
+          new ResponseEntity<>("Failed to add airport: " + e.getMessage(), HttpStatus.BAD_REQUEST);
+      logger.error(
+          "Failed to add airport: "
+              + airport.getAirportId()
+              + " "
+              + airport.getName()
+              + " "
+              + airport.getCode()
+              + " "
+              + airport.getCity()
+              + " "
+              + airport.getCountry());
     }
     return response;
   }
@@ -102,8 +105,7 @@ public class AirportController {
   @DeleteMapping("/{id}")
   @Operation(
       summary = "Delete an airport",
-      description = "Delete an airport with a given ID from the application state"
-  )
+      description = "Delete an airport with a given ID from the application state")
   public ResponseEntity<String> delete(@PathVariable Integer id) {
     ResponseEntity<String> response;
 
@@ -127,16 +129,16 @@ public class AirportController {
   @DeleteMapping("/all")
   @Operation(
       summary = "Delete all airports",
-      description = "Delete all airports from the application state"
-  )
+      description = "Delete all airports from the application state")
   public ResponseEntity<String> deleteAll() {
     ResponseEntity<String> response;
     try {
       airportService.removeAll();
       response = new ResponseEntity<>(HttpStatus.OK);
     } catch (Exception e) {
-      response = new ResponseEntity<>("Failed to remove all airports: " + e.getMessage(),
-          HttpStatus.BAD_REQUEST);
+      response =
+          new ResponseEntity<>(
+              "Failed to remove all airports: " + e.getMessage(), HttpStatus.BAD_REQUEST);
     }
     return response;
   }
@@ -144,15 +146,14 @@ public class AirportController {
   /**
    * Update an airport in the application state.
    *
-   * @param id      ID of the airport to update
+   * @param id ID of the airport to update
    * @param airport Airport data to update
    * @return 200 OK on success, 400 Bad request on error
    */
   @PutMapping("/{id}")
   @Operation(
       summary = "Update an airport",
-      description = "Update the details of an airport in the application state"
-  )
+      description = "Update the details of an airport in the application state")
   public ResponseEntity<String> update(@PathVariable Integer id, @RequestBody Airport airport) {
     ResponseEntity<String> response;
     String errorMessage = airportService.update(id, airport);

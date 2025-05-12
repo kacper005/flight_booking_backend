@@ -3,28 +3,25 @@ package edu.ntnu.flightbookingbackend.service;
 import edu.ntnu.flightbookingbackend.model.Airline;
 import edu.ntnu.flightbookingbackend.repository.AirlineRepository;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-/**
- * Business logic related to airlines.
- */
-
+/** Business logic related to airlines. */
 @Service
 @Tag(name = "Airline Service", description = "Business logic related to airlines")
 public class AirlineService {
-  @Autowired
-  private AirlineRepository airlineRepository;
+  @Autowired private AirlineRepository airlineRepository;
 
   /**
    * Get all airlines from the application state.
    *
    * @return A list of airlines, empty list if there are none
    */
-  @Operation(summary = "Get all airlines", description = "Get all airlines from the application state")
+  @Operation(
+      summary = "Get all airlines",
+      description = "Get all airlines from the application state")
   public Iterable<Airline> getAll() {
     return airlineRepository.findAll();
   }
@@ -35,8 +32,10 @@ public class AirlineService {
    * @param id ID of the airline to find
    * @return The airline or null if none found by the given ID
    */
-  @Operation(summary = "Find airline by ID", description = "Fetches an airline based on the provided ID")
-  public Airline findByID(int id) {
+  @Operation(
+      summary = "Find airline by ID",
+      description = "Fetches an airline based on the provided ID")
+  public Airline findById(int id) {
     Optional<Airline> airline = airlineRepository.findById(id);
     return airline.orElse(null);
   }
@@ -47,8 +46,9 @@ public class AirlineService {
    * @param airline Airline to persist
    * @return {@code true} when airline is added, {@code false} on error
    */
-
-  @Operation(summary = "Add a new airline", description = "Add a new airline to the application state")
+  @Operation(
+      summary = "Add a new airline",
+      description = "Add a new airline to the application state")
   public boolean add(Airline airline) {
     boolean added = false;
     boolean airlineExists = false;
@@ -85,10 +85,12 @@ public class AirlineService {
    * @param airline Airline to update
    * @return {@code true} when airline is updated, {@code false} on error
    */
-  @Operation(summary = "Update an airline", description = "Update an airline in the application state")
+  @Operation(
+      summary = "Update an airline",
+      description = "Update an airline in the application state")
   public String update(Integer airlineId, Airline airline) {
     String errorMessage = null;
-    Airline existingAirline = findByID(airlineId);
+    Airline existingAirline = findById(airlineId);
 
     if (existingAirline == null) {
       errorMessage = "No airline found with ID: " + airlineId;
@@ -104,19 +106,19 @@ public class AirlineService {
     return errorMessage;
   }
 
-
   /**
    * Remove an airline from the application state (database).
    *
    * @param airlineId ID of the airline to delete
    * @return {@code true} when airline is deleted, {@code false} when airline was not found in the
-   * database
+   *     database
    */
-
-  @Operation(summary = "Remove an airline", description = "Remove an airline from the application state")
+  @Operation(
+      summary = "Remove an airline",
+      description = "Remove an airline from the application state")
   public boolean remove(int airlineId) {
     boolean removed = false;
-    Airline airline = findByID(airlineId);
+    Airline airline = findById(airlineId);
 
     if (airline != null) {
       airlineRepository.delete(airline);
@@ -126,10 +128,9 @@ public class AirlineService {
     return removed;
   }
 
-  /**
-   * Removes all airlines from the application state (database).
-   */
-  @Operation(summary = "Removes all airlines",
+  /** Removes all airlines from the application state (database). */
+  @Operation(
+      summary = "Removes all airlines",
       description = "Removes all airlines from the application state")
   public void removeAll() {
     airlineRepository.deleteAll();

@@ -1,4 +1,5 @@
 package edu.ntnu.flightbookingbackend.model;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.Column;
@@ -10,9 +11,7 @@ import jakarta.persistence.ManyToMany;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * A price for a flight, with class and currency.
- */
+/** A price for a flight, with class and currency. */
 @Entity
 @Schema(description = "A price for a flight, with class and currency")
 public class Price {
@@ -28,14 +27,18 @@ public class Price {
 
   @Schema(description = "The type of class for the flight")
   private String classType;
+
   @Column(nullable = true)
   @Schema(description = "The price of the flight")
   private float price;
+
   @Schema(description = "The name of the price provider")
   private String priceProviderName;
+
   @Schema(description = "The currency of the price")
   private String currency;
 
+  /** Default constructor. */
   public Price() {}
 
   public Integer getPriceId() {
@@ -54,11 +57,21 @@ public class Price {
     this.flights = flights;
   }
 
+  /**
+   * Add a flight to the price.
+   *
+   * @param flight The flight to add
+   */
   public void addFlight(Flight flight) {
     this.flights.add(flight);
     flight.getPrices().add(this);
   }
 
+  /**
+   * Remove a flight from the price.
+   *
+   * @param flight The flight to remove
+   */
   public void removeFlight(Flight flight) {
     this.flights.remove(flight);
     flight.getPrices().remove(this);
