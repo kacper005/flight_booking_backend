@@ -22,8 +22,7 @@ public class FlightBookingBackendApplication {
             dataInitializer.initializeAirlines();
             dataInitializer.initializeAirports();
             dataInitializer.initializePrices();
-//            dataInitializer.initializeFlights();
-//            dataInitializer.assignPricesToFlights();
+            dataInitializer.initializeFlights();
         };
     }
 
