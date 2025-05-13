@@ -40,7 +40,7 @@ public class JwtUtil {
    */
   public String generateToken(AccessUserDetails userDetails) {
     long timeNow = System.currentTimeMillis();
-    long expirationTime = timeNow + 60 * 60 * 1000; // 1 hour
+    long expirationTime = timeNow + 60 * 60 * 1000 * 10; // 1 hour
 
     return Jwts.builder()
         .setSubject(String.valueOf(userDetails.getUserId())) // Nå bruker vi userId
