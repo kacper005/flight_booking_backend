@@ -48,6 +48,19 @@ public class BookingService {
   }
 
   /**
+   * Get all bookings made by a specific user.
+   *
+   * @param userId The ID of the user
+   * @return A list of bookings made by the user, empty if none found
+   */
+  @Operation(
+      summary = "Get bookings by user ID",
+      description = "Retrieve all bookings associated with the given user ID")
+  public List<Booking> getBookingsByUserId(Integer userId) {
+    return bookingRepository.findByUserUserId(userId);
+  }
+
+  /**
    * Add a booking to the application state (persist in the database).
    *
    * @param booking Booking to persist

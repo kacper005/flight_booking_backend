@@ -5,6 +5,7 @@ import edu.ntnu.flightbookingbackend.model.Flight;
 import edu.ntnu.flightbookingbackend.service.BookingService;
 import io.swagger.v3.oas.annotations.Operation;
 import java.util.List;
+import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -64,6 +65,19 @@ public class BookingController {
     return response;
   }
 
+    /**
+     * Get all bookings made by a specific user.
+     *
+     * @param userId ID of the user
+     * @return List of bookings made by the user
+     */
+  @GetMapping("/user/{userId}")
+  public ResponseEntity<List<Booking>> getBookingsByUser(@PathVariable Integer userId) {
+    List<Booking> bookings = bookingService.getBookingsByUserId(userId);
+    return ResponseEntity.ok(bookings);
+  }
+
+
   /**
    * Add a new booking.
    *
@@ -71,20 +85,20 @@ public class BookingController {
    * @return Status 201 if booking was added, 400 if failed
    */
   @PostMapping
-  @Operation(
-      summary = "Add a new booking",
-      description = "Add a new booking to the application state")
-  public ResponseEntity<String> add(@RequestBody Booking booking) {
+  @Operation(summary = "Add a new booking", description = "Add a new booking to the application state")
+  public ResponseEntity<Map<String, Integer>> add(@RequestBody Booking booking) {
     try {
       bookingService.add(booking);
       logger.info("Booking added with ID: " + booking.getBookingId());
-      return new ResponseEntity<>("Booking added successfully", HttpStatus.CREATED);
+      return new ResponseEntity<>(Map.of("bookingId", booking.getBookingId()), HttpStatus.CREATED);
     } catch (Exception e) {
       logger.error("Failed to add booking: " + e.getMessage());
-      return new ResponseEntity<>(
-          "Failed to add booking: " + e.getMessage(), HttpStatus.BAD_REQUEST);
+      return new ResponseEntity<>(Map.of("error", -1), HttpStatus.BAD_REQUEST);
     }
   }
+
+
+
 
   /** Add flight to an existing booking. */
   @PostMapping("/{id}/flights")
