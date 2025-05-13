@@ -286,7 +286,7 @@ public class DataInitializer {
                 2,
                 4,
                 3,
-                List.of(5, 6)),
+                List.of(3, 4)),
             new FlightSeedData(
                 "KL605",
                 LocalDateTime.of(2025, 7, 21, 7, 0),
@@ -298,7 +298,7 @@ public class DataInitializer {
                 3,
                 5,
                 6,
-                List.of(7, 8)),
+                List.of(5, 6)),
             new FlightSeedData(
                 "BA116",
                 LocalDateTime.of(2025, 10, 10, 10, 0),
@@ -310,7 +310,7 @@ public class DataInitializer {
                 4,
                 6,
                 1,
-                List.of(9, 10)),
+                List.of(7, 8)),
             new FlightSeedData(
                 "BA117",
                 LocalDateTime.of(2025, 10, 17, 15, 0),
@@ -322,7 +322,7 @@ public class DataInitializer {
                 4,
                 1,
                 6,
-                List.of(11, 12)),
+                List.of(7, 8)),
             new FlightSeedData(
                 "LX110",
                 LocalDateTime.of(2025, 8, 1, 6, 0),
@@ -334,7 +334,7 @@ public class DataInitializer {
                 5,
                 7,
                 5,
-                List.of(13, 14)),
+                List.of(9, 10)),
             new FlightSeedData(
                 "AZ560",
                 LocalDateTime.of(2025, 11, 15, 9, 0),
@@ -346,7 +346,7 @@ public class DataInitializer {
                 6,
                 8,
                 9,
-                List.of(15, 16)),
+                List.of(11, 12)),
             new FlightSeedData(
                 "AZ561",
                 LocalDateTime.of(2025, 11, 22, 12, 0),
@@ -358,7 +358,7 @@ public class DataInitializer {
                 6,
                 9,
                 8,
-                List.of(17, 18)),
+                List.of(11, 12)),
             new FlightSeedData(
                 "AA220",
                 LocalDateTime.of(2025, 6, 15, 7, 0),
@@ -370,7 +370,7 @@ public class DataInitializer {
                 7,
                 10,
                 11,
-                List.of(19, 20)),
+                List.of(13, 14)),
             new FlightSeedData(
                 "AA221",
                 LocalDateTime.of(2025, 6, 20, 10, 30),
@@ -382,7 +382,7 @@ public class DataInitializer {
                 7,
                 11,
                 10,
-                List.of(21, 22)),
+                List.of(13, 14)),
             new FlightSeedData(
                 "LH445",
                 LocalDateTime.of(2025, 7, 1, 8, 45),
@@ -394,7 +394,7 @@ public class DataInitializer {
                 8,
                 12,
                 1,
-                List.of(23, 24)),
+                List.of(15, 16)),
             new FlightSeedData(
                 "AF123",
                 LocalDateTime.of(2025, 5, 10, 10, 0),
@@ -406,7 +406,7 @@ public class DataInitializer {
                 9,
                 9,
                 13,
-                List.of(25, 26)),
+                List.of(17, 18)),
             new FlightSeedData(
                 "AF124",
                 LocalDateTime.of(2025, 5, 24, 14, 0),
@@ -418,7 +418,7 @@ public class DataInitializer {
                 9,
                 13,
                 9,
-                List.of(27, 28)),
+                List.of(17, 18)),
             new FlightSeedData(
                 "EK204",
                 LocalDateTime.of(2025, 8, 15, 8, 0),
@@ -430,7 +430,7 @@ public class DataInitializer {
                 10,
                 14,
                 6,
-                List.of(29, 30)),
+                List.of(19, 20)),
             new FlightSeedData(
                 "QR905",
                 LocalDateTime.of(2025, 9, 1, 2, 0),
@@ -442,7 +442,7 @@ public class DataInitializer {
                 11,
                 15,
                 16,
-                List.of(31, 32)),
+                List.of(21, 22)),
             new FlightSeedData(
                 "QR906",
                 LocalDateTime.of(2025, 9, 15, 6, 0),
@@ -454,7 +454,7 @@ public class DataInitializer {
                 11,
                 16,
                 15,
-                List.of(33, 34)),
+                List.of(21, 22)),
             new FlightSeedData(
                 "SQ26",
                 LocalDateTime.of(2025, 10, 20, 9, 0),
@@ -466,7 +466,7 @@ public class DataInitializer {
                 12,
                 17,
                 1,
-                List.of(35, 36)),
+                List.of(23, 24)),
             new FlightSeedData(
                 "SQ27",
                 LocalDateTime.of(2025, 10, 30, 11, 0),
@@ -478,7 +478,7 @@ public class DataInitializer {
                 12,
                 1,
                 17,
-                List.of(37, 38)));
+                List.of(23, 24)));
 
     for (FlightSeedData seed : flights) {
       if (flightRepository.existsByFlightNumber(seed.flightNumber())) {
