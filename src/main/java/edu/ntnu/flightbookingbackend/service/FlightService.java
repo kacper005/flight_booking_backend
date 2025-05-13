@@ -1,6 +1,7 @@
 package edu.ntnu.flightbookingbackend.service;
 
 import edu.ntnu.flightbookingbackend.dto.RoundTripFlightDto;
+import edu.ntnu.flightbookingbackend.enums.FlightStatus;
 import edu.ntnu.flightbookingbackend.model.Flight;
 import edu.ntnu.flightbookingbackend.model.Price;
 import edu.ntnu.flightbookingbackend.repository.FlightRepository;
@@ -184,6 +185,10 @@ public class FlightService {
       String from, String to, LocalDateTime start, LocalDateTime end, boolean roundTrip) {
     List<Flight> allFlights = (List<Flight>) flightRepository.findAll();
 
+    allFlights = allFlights.stream()
+        .filter(f -> f.getStatus() != FlightStatus.CANCELLED)
+        .collect(Collectors.toList());
+
     if (!roundTrip) {
       return allFlights.stream()
           .filter(f -> f.getDepartureAirport().getCode().equalsIgnoreCase(from))
@@ -210,6 +215,7 @@ public class FlightService {
 
       for (Flight outbound : outboundFlights) {
         allFlights.stream()
+            .filter(returnFlight -> returnFlight.getStatus() != FlightStatus.CANCELLED)
             .filter(
                 returnFlight ->
                     returnFlight.getRoundTrip()
