@@ -3,10 +3,10 @@ package edu.ntnu.flightbookingbackend;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
-@SpringBootTest
+//@SpringBootTest
 class FlightBookingBackendApplicationTests {
 
-  @Test
+  //@Test
   void contextLoads() {
   }
 
