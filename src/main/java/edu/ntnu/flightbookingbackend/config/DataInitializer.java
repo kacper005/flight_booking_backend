@@ -4,11 +4,13 @@ import edu.ntnu.flightbookingbackend.enums.FlightStatus;
 import edu.ntnu.flightbookingbackend.enums.Role;
 import edu.ntnu.flightbookingbackend.model.Airline;
 import edu.ntnu.flightbookingbackend.model.Airport;
+import edu.ntnu.flightbookingbackend.model.Feedback;
 import edu.ntnu.flightbookingbackend.model.Flight;
 import edu.ntnu.flightbookingbackend.model.Price;
 import edu.ntnu.flightbookingbackend.model.User;
 import edu.ntnu.flightbookingbackend.repository.AirlineRepository;
 import edu.ntnu.flightbookingbackend.repository.AirportRepository;
+import edu.ntnu.flightbookingbackend.repository.FeedbackRepository;
 import edu.ntnu.flightbookingbackend.repository.FlightRepository;
 import edu.ntnu.flightbookingbackend.repository.PriceRepository;
 import edu.ntnu.flightbookingbackend.repository.UserRepository;
@@ -31,6 +33,7 @@ public class DataInitializer {
   private final AirportRepository airportRepository;
   private final PriceRepository priceRepository;
   private final FlightRepository flightRepository;
+  private final FeedbackRepository feedbackRepository;
 
   /**
    * Constructor for DataInitializer.
@@ -41,6 +44,7 @@ public class DataInitializer {
    * @param airportRepository Airport repository for accessing airport data
    * @param priceRepository Price repository for accessing price data
    * @param flightRepository Flight repository for accessing flight data
+   * @param feedbackRepository Feedback repository for accessing feedback data
    */
   public DataInitializer(
       UserRepository userRepository,
@@ -48,13 +52,15 @@ public class DataInitializer {
       AirlineRepository airlineRepository,
       AirportRepository airportRepository,
       PriceRepository priceRepository,
-      FlightRepository flightRepository) {
+      FlightRepository flightRepository,
+      FeedbackRepository feedbackRepository) {
     this.userRepository = userRepository;
     this.passwordEncoder = passwordEncoder;
     this.airlineRepository = airlineRepository;
     this.airportRepository = airportRepository;
     this.priceRepository = priceRepository;
     this.flightRepository = flightRepository;
+    this.feedbackRepository = feedbackRepository;
   }
 
   /** Creates default users if they do not already exist in the database. */
@@ -89,6 +95,54 @@ public class DataInitializer {
       user.setCreatedAt(LocalDateTime.now());
       userRepository.save(user);
       System.out.println("Regular user Dave created.");
+    }
+
+    if (!userRepository.existsByEmail("johndoe@hotmail.com")) {
+      User user = new User();
+      user.setEmail("johndoe@hotmail.com");
+      user.setPassword(passwordEncoder.encode("johniscool11"));
+      user.setPhone("+4798765222");
+      user.setFirstName("John");
+      user.setLastName("Doe");
+      user.setDateOfBirth("01.01.1991");
+      user.setCountry("Norway");
+      user.setGender("Male");
+      user.setRole(Role.USER);
+      user.setCreatedAt(LocalDateTime.now());
+      userRepository.save(user);
+      System.out.println("Regular user John Doe created.");
+    }
+
+    if (!userRepository.existsByEmail("bob.n@yahoo.com")) {
+      User user = new User();
+      user.setEmail("bob.n@yahoo.com");
+      user.setPassword(passwordEncoder.encode("qwerty123"));
+      user.setPhone("+4798674221");
+      user.setFirstName("Bob");
+      user.setLastName("Normann");
+      user.setDateOfBirth("02.02.2002");
+      user.setCountry("Norway");
+      user.setGender("Male");
+      user.setRole(Role.USER);
+      user.setCreatedAt(LocalDateTime.now());
+      userRepository.save(user);
+      System.out.println("Regular user Bob Normann created.");
+    }
+
+    if (!userRepository.existsByEmail("sarah.nypd@gmail.com")) {
+      User user = new User();
+      user.setEmail("sarag.nypd@gmail.com");
+      user.setPassword(passwordEncoder.encode("BrooklynNine9"));
+      user.setPhone("+189067534");
+      user.setFirstName("Sarah");
+      user.setLastName("Nydalen");
+      user.setDateOfBirth("03.06.1989");
+      user.setCountry("United States");
+      user.setGender("Female");
+      user.setRole(Role.USER);
+      user.setCreatedAt(LocalDateTime.now());
+      userRepository.save(user);
+      System.out.println("Regular user Sarah Nydalen created.");
     }
   }
 
@@ -516,5 +570,49 @@ public class DataInitializer {
       flightRepository.save(flight);
       System.out.println(" Flight " + seed.flightNumber() + " with prices saved.");
     }
+  }
+
+  /**
+   * Builds a feedback object.
+   *
+   * @param user User who provided the feedback
+   * @param rating Rating given by the user
+   * @param comment Comment provided by the user
+   * @return Feedback object
+   */
+  private Feedback buildFeedback(User user, int rating, String comment) {
+    Feedback feedback = new Feedback();
+    feedback.setUser(user);
+    feedback.setRating(rating);
+    feedback.setComment(comment);
+    feedback.setCreatedAt(LocalDateTime.now().toString());
+    return feedback;
+  }
+
+    /** Initializes the database with a set of predefined feedback. */
+  public void initializeFeedback() {
+    if (feedbackRepository.count() > 0) {
+      System.out.println("Feedback already seeded.");
+      return;
+    }
+
+    Optional<User> user2 = userRepository.findById(2);
+    Optional<User> user3 = userRepository.findById(3);
+    Optional<User> user4 = userRepository.findById(4);
+    Optional<User> user5 = userRepository.findById(5);
+
+    if (user2.isEmpty() || user3.isEmpty() || user4.isEmpty() || user5.isEmpty()) {
+      System.out.println("Cannot seed feedback - users not found.");
+      return;
+    }
+
+    List<Feedback> feedbacks =
+        List.of(
+            buildFeedback(user2.get(), 5, "Great experience! Easy to use and book flights."),
+            buildFeedback(user3.get(), 4, "Good service, but could improve."),
+            buildFeedback(user4.get(), 3, "Average experience. Nothing special, but okay."),
+            buildFeedback(user5.get(), 2, "Not satisfied with the service."));
+    feedbackRepository.saveAll(feedbacks);
+    System.out.println("Feedback seeded.");
   }
 }
