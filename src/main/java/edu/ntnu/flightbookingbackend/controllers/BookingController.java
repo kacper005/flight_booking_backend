@@ -65,12 +65,12 @@ public class BookingController {
     return response;
   }
 
-    /**
-     * Get all bookings made by a specific user.
-     *
-     * @param userId ID of the user
-     * @return List of bookings made by the user
-     */
+  /**
+   * Get all bookings made by a specific user.
+   *
+   * @param userId ID of the user
+   * @return List of bookings made by the user
+   */
   @GetMapping("/user/{userId}")
   @Operation(
         summary = "Get bookings by user ID",
@@ -80,7 +80,6 @@ public class BookingController {
     return ResponseEntity.ok(bookings);
   }
 
-
   /**
    * Add a new booking.
    *
@@ -88,7 +87,9 @@ public class BookingController {
    * @return Status 201 if booking was added, 400 if failed
    */
   @PostMapping
-  @Operation(summary = "Add a new booking", description = "Add a new booking to the application state")
+  @Operation(
+      summary = "Add a new booking",
+      description = "Add a new booking to the application state")
   public ResponseEntity<Map<String, Integer>> add(@RequestBody Booking booking) {
     try {
       bookingService.add(booking);
@@ -99,9 +100,6 @@ public class BookingController {
       return new ResponseEntity<>(Map.of("error", -1), HttpStatus.BAD_REQUEST);
     }
   }
-
-
-
 
   /** Add flight to an existing booking. */
   @PostMapping("/{id}/flights")
