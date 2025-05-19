@@ -94,7 +94,6 @@ public class DataInitializer {
       user.setRole(Role.USER);
       user.setCreatedAt(LocalDateTime.now());
       userRepository.save(user);
-      System.out.println("Regular user Dave created.");
     }
 
     if (!userRepository.existsByEmail("johndoe@hotmail.com")) {
@@ -110,7 +109,6 @@ public class DataInitializer {
       user.setRole(Role.USER);
       user.setCreatedAt(LocalDateTime.now());
       userRepository.save(user);
-      System.out.println("Regular user John Doe created.");
     }
 
     if (!userRepository.existsByEmail("bob.n@yahoo.com")) {
@@ -126,7 +124,6 @@ public class DataInitializer {
       user.setRole(Role.USER);
       user.setCreatedAt(LocalDateTime.now());
       userRepository.save(user);
-      System.out.println("Regular user Bob Normann created.");
     }
 
     if (!userRepository.existsByEmail("sarah.nypd@gmail.com")) {
@@ -142,8 +139,8 @@ public class DataInitializer {
       user.setRole(Role.USER);
       user.setCreatedAt(LocalDateTime.now());
       userRepository.save(user);
-      System.out.println("Regular user Sarah Nydalen created.");
     }
+    System.out.println("Regular users Dave, John, Bob and Sarah created.");
   }
 
   /** Creates default airlines if they do not already exist in the database. */
@@ -156,7 +153,6 @@ public class DataInitializer {
       airline.setCountry(country);
       airline.setLogoFileName(logoFileName);
       airlineRepository.save(airline);
-      System.out.println("Airline " + name + " created.");
     }
   }
 
@@ -185,6 +181,7 @@ public class DataInitializer {
     addAirlineIfNotExists("Air China", "CA", "China", "air_china");
     addAirlineIfNotExists("Brussels Airlines", "SN", "Belgium", "brussels_airlines");
     addAirlineIfNotExists("Finnair", "AY", "Finland", "finnair");
+    System.out.println("All airlines created.");
   }
 
   /**
@@ -203,7 +200,6 @@ public class DataInitializer {
       airport.setCity(city);
       airport.setCountry(country);
       airportRepository.save(airport);
-      System.out.println("Airport " + name + " created.");
     }
   }
 
@@ -238,6 +234,7 @@ public class DataInitializer {
     addAirportIfNotExists("Toronto Pearson International Airport", "YYZ", "Toronto", "Canada");
     addAirportIfNotExists(
         "San Francisco International Airport", "SFO", "San Francisco", "United States");
+    System.out.println("All airports created.");
   }
 
   /**
@@ -256,7 +253,6 @@ public class DataInitializer {
       p.setPriceProviderName(provider);
       p.setCurrency(currency);
       priceRepository.save(p);
-      System.out.println("Price " + classType + " saved.");
     }
   }
 
@@ -303,6 +299,7 @@ public class DataInitializer {
     addPrice("Economy Flex", 500, "Wizz Air App", "PLN");
     addPrice("Economy", 450, "SAS Website", "EUR");
     addPrice("Economy", 460, "Finnair Website", "EUR");
+    System.out.println("All prices saved.");
   }
 
   /**
@@ -732,8 +729,8 @@ public class DataInitializer {
 
       flight.setPrices(new ArrayList<>(prices));
       flightRepository.save(flight);
-      System.out.println(" Flight " + seed.flightNumber() + " with prices saved.");
     }
+    System.out.println("All flights created with prices.");
   }
 
   /**
