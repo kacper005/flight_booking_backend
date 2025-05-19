@@ -32,7 +32,6 @@ public class User {
   @Schema(description = "The email of the user", example = "user@mail.com")
   private String email;
 
-  //  @Convert(converter = CryptoConverter.class)
   @Schema(description = "The password of the user", example = "password123")
   private String password;
 
