@@ -23,10 +23,10 @@ public class Booking {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name = "booking_id")
-  @Schema(description = "The id of the booking")
+  @Schema(description = "The id of the booking", example = "1")
   private Integer bookingId;
 
-  @Schema(description = "The date of the booking")
+  @Schema(description = "The date of the booking", example = "2023-10-01")
   private String bookingDate;
 
   @ManyToOne

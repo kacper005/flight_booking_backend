@@ -179,7 +179,8 @@ public class FlightController {
   @Operation(
         summary = "Search for flights",
         description =
-            "Search for flights based on departure and arrival locations, start and end times, and round-trip option")
+            "Search for flights based on departure and arrival locations, start and end times, "
+                + "and round-trip option")
   public ResponseEntity<?> searchFlights(
       @RequestParam String from,
       @RequestParam String to,

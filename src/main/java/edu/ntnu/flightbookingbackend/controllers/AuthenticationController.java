@@ -45,7 +45,8 @@ public class AuthenticationController {
   @Operation (
       summary = "User login",
       description =
-          "Authenticates the user with the provided credentials and returns a JWT token if successful.")
+          "Authenticates the user with the provided credentials and returns a JWT token "
+              + "if successful.")
   public ResponseEntity<?> login(@RequestBody AuthenticationRequest request) {
     try {
       authenticationManager.authenticate(
