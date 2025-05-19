@@ -177,9 +177,10 @@ public class FlightController {
    */
   @GetMapping("/search")
   @Operation(
-        summary = "Search for flights",
-        description =
-            "Search for flights based on departure and arrival locations, start and end times, and round-trip option")
+      summary = "Search for flights",
+      description =
+          "Search for flights based on departure and arrival locations, start and end times,"
+              + " and round-trip option")
   public ResponseEntity<?> searchFlights(
       @RequestParam String from,
       @RequestParam String to,

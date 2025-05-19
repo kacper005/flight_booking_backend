@@ -42,10 +42,11 @@ public class AuthenticationController {
    * @return A response entity containing the generated JWT token or an error message.
    */
   @PostMapping("/login")
-  @Operation (
+  @Operation(
       summary = "User login",
       description =
-          "Authenticates the user with the provided credentials and returns a JWT token if successful.")
+          "Authenticates the user with the provided credentials and returns a "
+                  + "JWT token if successful.")
   public ResponseEntity<?> login(@RequestBody AuthenticationRequest request) {
     try {
       authenticationManager.authenticate(
@@ -67,7 +68,7 @@ public class AuthenticationController {
    * @return A response entity containing the authenticated user's information or an error status.
    */
   @GetMapping("/me")
-  @Operation (
+  @Operation(
       summary = "Get current user",
       description = "Returns the currently authenticated user's information.")
   public ResponseEntity<User> getUserMe() {
