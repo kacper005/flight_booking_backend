@@ -29,6 +29,9 @@ public class Booking {
   @Schema(description = "The date of the booking", example = "2023-10-01")
   private String bookingDate;
 
+  @Schema(description = "Number of travellers")
+  private int numberOfTravellers;
+
   @ManyToOne
   @JoinColumn(name = "user_id", nullable = true)
   private User user;
@@ -57,6 +60,14 @@ public class Booking {
 
   public void setBookingDate(String bookingDate) {
     this.bookingDate = bookingDate;
+  }
+
+  public int getNumberOfTravellers() {
+    return numberOfTravellers;
+  }
+
+  public void setNumberOfTravellers(int numberOfTravellers) {
+    this.numberOfTravellers = numberOfTravellers;
   }
 
   public User getUser() {
