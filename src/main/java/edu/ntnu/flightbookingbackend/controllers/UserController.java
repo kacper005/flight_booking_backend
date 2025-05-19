@@ -173,11 +173,14 @@ public class UserController {
   }
 
   /**
-   * Deletes all users from the application state, excluding those with the ADMIN role.
+   * Deletes all users except Admin, from the application state, excluding those with the ADMIN role.
    *
    * @return 200 OK on success, 400 Bad request on error
    */
   @DeleteMapping
+  @Operation(
+      summary = "Delete all users except Admin",
+      description = "Delete all users from the application state, excluding those with the ADMIN role")
   public ResponseEntity<String> deleteAllExceptAdmin() {
     Iterable<User> users = userService.getAll();
     int deletedCount = 0;

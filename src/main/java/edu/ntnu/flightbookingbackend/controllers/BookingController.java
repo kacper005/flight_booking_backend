@@ -72,6 +72,9 @@ public class BookingController {
      * @return List of bookings made by the user
      */
   @GetMapping("/user/{userId}")
+  @Operation(
+        summary = "Get bookings by user ID",
+        description = "Fetches all bookings made by a specific user based on their ID")
   public ResponseEntity<List<Booking>> getBookingsByUser(@PathVariable Integer userId) {
     List<Booking> bookings = bookingService.getBookingsByUserId(userId);
     return ResponseEntity.ok(bookings);
