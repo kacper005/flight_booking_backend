@@ -236,7 +236,8 @@ public class DataInitializer {
     addAirportIfNotExists("Molde Airport", "MOL", "Molde", "Norway");
     addAirportIfNotExists("Beijing Capital International Airport", "PEK", "Beijing", "China");
     addAirportIfNotExists("Toronto Pearson International Airport", "YYZ", "Toronto", "Canada");
-    addAirportIfNotExists("San Francisco International Airport", "SFO", "San Francisco", "United States");
+    addAirportIfNotExists(
+        "San Francisco International Airport", "SFO", "San Francisco", "United States");
   }
 
   /**
@@ -574,7 +575,7 @@ public class DataInitializer {
                 "Business, First Class",
                 8, // Lufthansa
                 12, // Frankfurt
-                1,  // JFK
+                1, // JFK
                 List.of(25, 26)),
             new FlightSeedData(
                 "AF456",
@@ -586,7 +587,7 @@ public class DataInitializer {
                 "First Class",
                 9, // Air France
                 13, // CDG
-                1,  // JFK
+                1, // JFK
                 List.of(27, 28)),
             new FlightSeedData(
                 "WZ999",
@@ -610,7 +611,7 @@ public class DataInitializer {
                 "First Class",
                 10, // Emirates
                 14, // DXB
-                1,  // JFK
+                1, // JFK
                 List.of(30)),
             new FlightSeedData(
                 "SQ100",
@@ -622,7 +623,7 @@ public class DataInitializer {
                 "Suites",
                 12, // Singapore Airlines
                 17, // SIN
-                1,  // JFK
+                1, // JFK
                 List.of(31)),
             new FlightSeedData(
                 "WF321",
@@ -633,7 +634,7 @@ public class DataInitializer {
                 "Free Coffee, Regional Snacks",
                 "Economy",
                 18, // Wideroe
-                4,  // Ålesund
+                4, // Ålesund
                 22, // Molde
                 List.of(32)),
             new FlightSeedData(
@@ -645,8 +646,8 @@ public class DataInitializer {
                 "Wi-Fi, Scandinavian Meals, Child Packs",
                 "Economy, Premium Economy",
                 19, // SAS
-                4,  // Ålesund
-                3,  // Oslo
+                4, // Ålesund
+                3, // Oslo
                 List.of(33, 34)),
             new FlightSeedData(
                 "QR777",
@@ -672,7 +673,6 @@ public class DataInitializer {
                 18,
                 19,
                 List.of(25, 26)),
-
             new FlightSeedData(
                 "LO455",
                 LocalDateTime.of(2025, 7, 5, 10, 0),
@@ -685,7 +685,6 @@ public class DataInitializer {
                 19,
                 21,
                 List.of(25, 27)),
-
             new FlightSeedData(
                 "LO670",
                 LocalDateTime.of(2025, 8, 8, 7, 10),
@@ -698,7 +697,6 @@ public class DataInitializer {
                 20,
                 27,
                 List.of(28, 29)));
-
 
     for (FlightSeedData seed : flights) {
       if (flightRepository.existsByFlightNumber(seed.flightNumber())) {
@@ -755,7 +753,7 @@ public class DataInitializer {
     return feedback;
   }
 
-    /** Initializes the database with a set of predefined feedback. */
+  /** Initializes the database with a set of predefined feedback. */
   public void initializeFeedback() {
     if (feedbackRepository.count() > 0) {
       System.out.println("Feedback already seeded.");

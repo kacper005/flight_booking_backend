@@ -18,11 +18,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-/**
- * REST API controller for the Feedback entity.
- *
- * <p>This controller handles all CRUD operations related to feedback entries in the system.
- */
+/** REST API controller for the Feedback entity. */
 @RestController
 @RequestMapping("/feedback")
 public class FeedbackController {
