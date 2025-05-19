@@ -741,12 +741,12 @@ public class DataInitializer {
    * @param comment Comment provided by the user
    * @return Feedback object
    */
-  private Feedback buildFeedback(User user, int rating, String comment) {
+  private Feedback buildFeedback(User user, int rating, String comment, LocalDateTime createdAt) {
     Feedback feedback = new Feedback();
     feedback.setUser(user);
     feedback.setRating(rating);
     feedback.setComment(comment);
-    feedback.setCreatedAt(LocalDateTime.now().toString());
+    feedback.setCreatedAt(createdAt.toString());
     return feedback;
   }
 
@@ -769,10 +769,15 @@ public class DataInitializer {
 
     List<Feedback> feedbacks =
         List.of(
-            buildFeedback(user2.get(), 5, "Great experience! Easy to use and book flights."),
-            buildFeedback(user3.get(), 4, "Good service, but could improve."),
-            buildFeedback(user4.get(), 3, "Average experience. Nothing special, but okay."),
-            buildFeedback(user5.get(), 2, "Not satisfied with the service."));
+            buildFeedback(user2.get(), 5, "Great experience! Easy to use and book flights.",
+                    LocalDateTime.now()),
+            buildFeedback(user3.get(), 4, "Good service, but could improve.",
+                    LocalDateTime.now().minusDays(1)),
+            buildFeedback(user4.get(), 3, "Average experience. Nothing special, but okay.",
+                    LocalDateTime.now().minusDays(2)),
+            buildFeedback(user5.get(), 2, "Not satisfied with the service.",
+                    LocalDateTime.now().minusDays(3))
+        );
     feedbackRepository.saveAll(feedbacks);
     System.out.println("Feedback seeded.");
   }
