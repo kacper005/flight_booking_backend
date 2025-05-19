@@ -179,6 +179,12 @@ public class DataInitializer {
     addAirlineIfNotExists("Turkish Airlines", "TK", "Turkey", "turkish_airlines");
     addAirlineIfNotExists("Brussels Airlines", "SN", "Belgium", "brussels_airlines");
     addAirlineIfNotExists("United Airlines", "UA", "United States", "united_airlines");
+    addAirlineIfNotExists("Wideroe", "WF", "Norway", "wideroe");
+    addAirlineIfNotExists("SAS", "SK", "Sweden", "sas");
+    addAirlineIfNotExists("Air Canada", "AC", "Canada", "air_canada");
+    addAirlineIfNotExists("Air China", "CA", "China", "air_china");
+    addAirlineIfNotExists("Brussels Airlines", "SN", "Belgium", "brussels_airlines");
+    addAirlineIfNotExists("Finnair", "AY", "Finland", "finnair");
   }
 
   /**
@@ -223,6 +229,14 @@ public class DataInitializer {
     addAirportIfNotExists("Hamad International Airport", "DOH", "Doha", "Qatar");
     addAirportIfNotExists("Sydney Kingsford Smith Airport", "SYD", "Sydney", "Australia");
     addAirportIfNotExists("Singapore Changi Airport", "SIN", "Singapore", "Singapore");
+    addAirportIfNotExists("Gdańsk Lech Walesa Airport", "GDN", "Gdansk", "Poland");
+    addAirportIfNotExists("Warsaw Chopin Airport", "WAW", "Warszawa", "Poland");
+    addAirportIfNotExists("Katowice Wojciech Korfanty Airport", "KTW", "Katowice", "Poland");
+    addAirportIfNotExists("Krakow John Paul II International Airport", "KRK", "Krakow", "Poland");
+    addAirportIfNotExists("Molde Airport", "MOL", "Molde", "Norway");
+    addAirportIfNotExists("Beijing Capital International Airport", "PEK", "Beijing", "China");
+    addAirportIfNotExists("Toronto Pearson International Airport", "YYZ", "Toronto", "Canada");
+    addAirportIfNotExists("San Francisco International Airport", "SFO", "San Francisco", "United States");
   }
 
   /**
@@ -271,6 +285,23 @@ public class DataInitializer {
     addPrice("Economy", 1520, "CheapOair", "USD");
     addPrice("Economy", 2000, "Singapore Airlines Website", "USD");
     addPrice("Economy", 2050, "Google Flights", "SGD");
+    addPrice("Business", 850, "SkyScanner", "USD");
+    addPrice("Business", 900, "Expedia", "USD");
+    addPrice("First Class", 1500, "Momondo", "EUR");
+    addPrice("First Class", 1600, "Kayak", "EUR");
+    addPrice("Economy", 95, "Trip.com", "EUR");
+    addPrice("Premium Economy", 250, "Kiwi.com", "USD");
+    addPrice("Economy", 105, "TravelGenio", "GBP");
+    addPrice("Economy Flex", 1350, "Travelocity", "USD");
+    addPrice("Business", 1100, "Lufthansa Website", "EUR");
+    addPrice("First Class", 3000, "Qatar Airways Website", "USD");
+    addPrice("Suites", 5000, "Singapore Airlines Website", "SGD");
+    addPrice("Business", 1200, "LOT Website", "PLN");
+    addPrice("Economy", 320, "LOT Website", "PLN");
+    addPrice("Economy", 400, "Google Flights", "PLN");
+    addPrice("Economy Flex", 500, "Wizz Air App", "PLN");
+    addPrice("Economy", 450, "SAS Website", "EUR");
+    addPrice("Economy", 460, "Finnair Website", "EUR");
   }
 
   /**
@@ -532,7 +563,142 @@ public class DataInitializer {
                 12,
                 1,
                 17,
-                List.of(23, 24)));
+                List.of(23, 24)),
+            new FlightSeedData(
+                "LH789",
+                LocalDateTime.of(2025, 9, 1, 15, 30),
+                LocalDateTime.of(2025, 9, 1, 18, 45),
+                true,
+                "SCHEDULED",
+                "On-demand Video, Gourmet Meals, Lounge Access",
+                "Business, First Class",
+                8, // Lufthansa
+                12, // Frankfurt
+                1,  // JFK
+                List.of(25, 26)),
+            new FlightSeedData(
+                "AF456",
+                LocalDateTime.of(2025, 11, 12, 22, 0),
+                LocalDateTime.of(2025, 11, 13, 7, 0),
+                false,
+                "SCHEDULED",
+                "La Première Suites, Personal Chauffeur, In-flight Spa",
+                "First Class",
+                9, // Air France
+                13, // CDG
+                1,  // JFK
+                List.of(27, 28)),
+            new FlightSeedData(
+                "WZ999",
+                LocalDateTime.of(2025, 7, 3, 5, 45),
+                LocalDateTime.of(2025, 7, 3, 8, 0),
+                false,
+                "SCHEDULED",
+                "Affordable, Efficient, Seat Selection",
+                "Economy",
+                13, // Wizz
+                18, // Gdansk
+                21, // Krakow
+                List.of(29)),
+            new FlightSeedData(
+                "EK999",
+                LocalDateTime.of(2025, 12, 24, 6, 0),
+                LocalDateTime.of(2025, 12, 24, 20, 0),
+                false,
+                "SCHEDULED",
+                "Private Suites, Shower Spa, Lounge Access",
+                "First Class",
+                10, // Emirates
+                14, // DXB
+                1,  // JFK
+                List.of(30)),
+            new FlightSeedData(
+                "SQ100",
+                LocalDateTime.of(2025, 12, 1, 9, 0),
+                LocalDateTime.of(2025, 12, 1, 21, 0),
+                false,
+                "SCHEDULED",
+                "Suite Class with Standalone Bed and Door, Book the Cook",
+                "Suites",
+                12, // Singapore Airlines
+                17, // SIN
+                1,  // JFK
+                List.of(31)),
+            new FlightSeedData(
+                "WF321",
+                LocalDateTime.of(2025, 10, 5, 7, 30),
+                LocalDateTime.of(2025, 10, 5, 8, 15),
+                true,
+                "SCHEDULED",
+                "Free Coffee, Regional Snacks",
+                "Economy",
+                18, // Wideroe
+                4,  // Ålesund
+                22, // Molde
+                List.of(32)),
+            new FlightSeedData(
+                "SK789",
+                LocalDateTime.of(2025, 8, 18, 13, 0),
+                LocalDateTime.of(2025, 8, 18, 16, 30),
+                false,
+                "SCHEDULED",
+                "Wi-Fi, Scandinavian Meals, Child Packs",
+                "Economy, Premium Economy",
+                19, // SAS
+                4,  // Ålesund
+                3,  // Oslo
+                List.of(33, 34)),
+            new FlightSeedData(
+                "QR777",
+                LocalDateTime.of(2025, 7, 9, 1, 30),
+                LocalDateTime.of(2025, 7, 9, 18, 45),
+                false,
+                "SCHEDULED",
+                "Qsuite, Dine-on-Demand, Noise-Cancelling Headphones",
+                "Qsuite",
+                11,
+                15,
+                1,
+                List.of(35)),
+            new FlightSeedData(
+                "LO381",
+                LocalDateTime.of(2025, 6, 18, 6, 50),
+                LocalDateTime.of(2025, 6, 18, 8, 30),
+                false,
+                "SCHEDULED",
+                "Complimentary Snacks, Seat-back Screens",
+                "Economy",
+                14,
+                18,
+                19,
+                List.of(25, 26)),
+
+            new FlightSeedData(
+                "LO455",
+                LocalDateTime.of(2025, 7, 5, 10, 0),
+                LocalDateTime.of(2025, 7, 5, 12, 45),
+                true,
+                "SCHEDULED",
+                "Wi-Fi, Free Drinks",
+                "Economy, Business",
+                14,
+                19,
+                21,
+                List.of(25, 27)),
+
+            new FlightSeedData(
+                "LO670",
+                LocalDateTime.of(2025, 8, 8, 7, 10),
+                LocalDateTime.of(2025, 8, 8, 10, 30),
+                false,
+                "SCHEDULED",
+                "Extra Legroom, Priority Boarding",
+                "Economy Flex, Business",
+                14,
+                20,
+                27,
+                List.of(28, 29)));
+
 
     for (FlightSeedData seed : flights) {
       if (flightRepository.existsByFlightNumber(seed.flightNumber())) {
