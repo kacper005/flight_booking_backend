@@ -29,7 +29,7 @@ public class Airline {
   @Schema(description = "Country where the airline is registered.", example = "Norway")
   private String country;
 
-  @Schema(description = "Filename of the airline's logo.", example = "norwegian.png")
+  @Schema(description = "Filename of the airline's logo.", example = "norwegian")
   private String logoFileName;
 
   /** Default constructor. */

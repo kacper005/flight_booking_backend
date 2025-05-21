@@ -1,11 +1,16 @@
 package edu.ntnu.flightbookingbackend.dto;
 
 import edu.ntnu.flightbookingbackend.model.Flight;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 /**
  * Data Transfer Object (DTO) for representing a round trip flight. This class contains two flights:
  * an outbound flight and a return flight.
  */
+@Schema(
+    description =
+        "Data Transfer Object (DTO) for representing a round trip flight. This class contains two "
+            + "flights: an outbound flight and a return flight.")
 public class RoundTripFlightDto {
 
   private Flight outboundFlight;
