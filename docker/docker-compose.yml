@@ -1,8 +1,17 @@
 version: '3.1'
 
 services:
+  app:
+    build:
+      context: ..
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    depends_on:
+        db:
+          condition: service_healthy
   db:
-    image: mysql
+    image: mysql:8.0.42
     restart: always
     environment:
       MYSQL_ROOT_PASSWORD: ${MYSQL_PASSWORD}
@@ -11,3 +20,7 @@ services:
       - "3306:3306"
     volumes:
       - ./data.sql:/docker-entrypoint-initdb.d/data.sql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      timeout: 5s
+      retries: 20
