@@ -17,6 +17,12 @@ application you need to have Docker Desktop installed and running. It is recomme
 if it is already running on your system, to free the port for the docker container. When this is 
 done, do the following steps in the IDE terminal:
 
+First time and on every update the application need to be cleaned, compiled and built with the
+following maven commands:
+1. `mvn clean` - cleans the project and removes all compiled files.
+2. `mvn compile` - compiles the project and creates the target folder.
+3. `mvn package` - packages the project and creates a jar file in the target folder.
+
 First time:
 1. Navigate to the "docker" folder in the project with `cd ./docker/`.
 2. To build/rebuild the docker image use the commands `docker-compose up --build`.
