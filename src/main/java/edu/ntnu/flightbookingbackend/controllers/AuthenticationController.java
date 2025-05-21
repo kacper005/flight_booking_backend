@@ -6,6 +6,7 @@ import edu.ntnu.flightbookingbackend.security.AccessUserService;
 import edu.ntnu.flightbookingbackend.security.AuthenticationRequest;
 import edu.ntnu.flightbookingbackend.security.AuthenticationResponse;
 import edu.ntnu.flightbookingbackend.security.JwtUtil;
+import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -41,6 +42,11 @@ public class AuthenticationController {
    * @return A response entity containing the generated JWT token or an error message.
    */
   @PostMapping("/login")
+  @Operation(
+      summary = "User login",
+      description =
+          "Authenticates the user with the provided credentials and returns a JWT token "
+              + "if successful.")
   public ResponseEntity<?> login(@RequestBody AuthenticationRequest request) {
     try {
       authenticationManager.authenticate(
@@ -62,6 +68,9 @@ public class AuthenticationController {
    * @return A response entity containing the authenticated user's information or an error status.
    */
   @GetMapping("/me")
+  @Operation(
+      summary = "Get current user",
+      description = "Returns the currently authenticated user's information.")
   public ResponseEntity<User> getUserMe() {
 
     UserDetails userDetails =

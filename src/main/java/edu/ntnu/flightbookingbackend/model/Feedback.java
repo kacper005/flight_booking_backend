@@ -16,7 +16,7 @@ public class Feedback {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name = "feedback_id")
-  @Schema(description = "The unique ID of the feedback")
+  @Schema(description = "The unique ID of the feedback", example = "1")
   private Integer feedbackId;
 
   @ManyToOne
@@ -24,14 +24,18 @@ public class Feedback {
   @Schema(description = "The ID of the user who submitted the feedback")
   private User user;
 
-  @Schema(description = "Rating given to the website (e.g., from 1 to 5)")
+  @Schema(description = "Rating given to the website between 1 and 5", example = "4")
   private int rating;
 
   @Column(columnDefinition = "TEXT")
-  @Schema(description = "Optional comment regarding the website experience")
+  @Schema(
+      description = "Optional comment regarding the website experience",
+      example = "Great service!")
   private String comment;
 
-  @Schema(description = "The timestamp when the feedback was submitted")
+  @Schema(
+      description = "The timestamp when the feedback was submitted",
+      example = "2023-10-01T12:00:00Z")
   @Column(updatable = false)
   private String createdAt;
 

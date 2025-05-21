@@ -25,39 +25,39 @@ public class User {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name = "user_id")
-  @Schema(description = "The id of the user")
+  @Schema(description = "The id of the user", example = "1")
   private Integer userId;
 
   @Column(unique = true, nullable = false)
-  @Schema(description = "The email of the user")
+  @Schema(description = "The email of the user", example = "user@mail.com")
   private String email;
 
-  //  @Convert(converter = CryptoConverter.class)
-  @Schema(description = "The password of the user")
+  @Schema(description = "The password of the user", example = "password123")
   private String password;
 
-  @Schema(description = "The phone number of the user")
+  @Schema(description = "The phone number of the user", example = "+4712345678")
   private String phone;
 
-  @Schema(description = "The first name of the user")
+  @Schema(description = "The first name of the user", example = "John")
   private String firstName;
 
-  @Schema(description = "The last name of the user")
+  @Schema(description = "The last name of the user", example = "Doe")
   private String lastName;
 
-  @Schema(description = "The date of birth of the user")
+  @Schema(description = "The date of birth of the user", example = "1990-01-01")
   private String dateOfBirth;
 
-  @Schema(description = "The country of residence of the user")
+  @Schema(description = "The country of residence of the user", example = "Uganda")
   private String country;
 
-  @Schema(description = "The gender of the user")
+  @Schema(description = "The gender of the user", example = "Male")
   private String gender;
 
+  @Schema(description = "The role of the user", example = "USER")
   @Enumerated(EnumType.STRING)
   private Role role;
 
-  @Schema(description = "The date the user was created")
+  @Schema(description = "The date the user was created", example = "2023-10-01T12:00:00")
   @Column(updatable = false)
   private LocalDateTime createdAt;
 

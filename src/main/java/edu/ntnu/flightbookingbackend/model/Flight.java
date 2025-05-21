@@ -61,16 +61,16 @@ public class Flight {
 
   @Schema(
       description = "List of extra features available on the flight.",
-      example = "[\"WiFi\", \"In-seat Power\", \"Extra Legroom\"]")
+      example = "WiFi, In-seat Power, Extra Legroom")
   private String extraFeatures;
 
   @Schema(
       description = "List of available classes on the flight",
-      example = "[\"Economy\", \"Business\", \"First Class\"]")
+      example = "Economy, Business, First Class")
   private String availableClasses;
 
   @Enumerated(EnumType.STRING)
-  @Schema(description = "Current status of the flight.", example = "Scheduled,Delayed,Cancelled")
+  @Schema(description = "Current status of the flight.", example = "Scheduled, Delayed, Cancelled")
   private FlightStatus status;
 
   @ManyToMany(mappedBy = "flights")

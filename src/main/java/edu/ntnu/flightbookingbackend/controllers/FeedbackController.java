@@ -18,11 +18,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-/**
- * REST API controller for the Feedback entity.
- *
- * <p>This controller handles all CRUD operations related to feedback entries in the system.
- */
+/** REST API controller for the Feedback entity. */
 @RestController
 @RequestMapping("/feedback")
 public class FeedbackController {
@@ -36,7 +32,7 @@ public class FeedbackController {
    * @return List of all feedback in the system
    */
   @GetMapping
-  @Operation(summary = "Get all feedback")
+  @Operation(summary = "Get all feedback", description = "Returns a list of all feedback entries")
   public Iterable<Feedback> getAllFeedback() {
     return feedbackService.getAllFeedback();
   }
@@ -48,7 +44,8 @@ public class FeedbackController {
    * @return Feedback entry or status 404 if not found
    */
   @GetMapping("/{id}")
-  @Operation(summary = "Get feedback by ID")
+  @Operation(summary = "Get feedback by ID",
+      description = "Fetches feedback based on the provided ID")
   public ResponseEntity<Feedback> getFeedbackById(@PathVariable Integer id) {
     ResponseEntity<Feedback> response;
     Feedback feedback = feedbackService.findById(id);
@@ -68,7 +65,8 @@ public class FeedbackController {
    * @return Response entity with a message
    */
   @PostMapping
-  @Operation(summary = "Add new feedback")
+  @Operation(summary = "Add new feedback",
+      description = "Adds a new feedback to the application state")
   public ResponseEntity<String> addFeedback(@RequestBody Feedback feedback) {
     ResponseEntity<String> response;
 
@@ -92,7 +90,8 @@ public class FeedbackController {
    * @return Response entity with a message
    */
   @PutMapping("/{id}")
-  @Operation(summary = "Update existing feedback")
+  @Operation(summary = "Update existing feedback",
+      description = "Updates an existing feedback entry")
   public ResponseEntity<String> updateFeedback(
       @PathVariable Integer id, @RequestBody Feedback feedback) {
     ResponseEntity<String> response;
@@ -112,7 +111,8 @@ public class FeedbackController {
    * @return Response entity with a message
    */
   @DeleteMapping("/{id}")
-  @Operation(summary = "Delete feedback by ID")
+  @Operation(summary = "Delete feedback by ID",
+      description = "Deletes a feedback entry based on the provided ID")
   public ResponseEntity<String> deleteFeedback(@PathVariable Integer id) {
     ResponseEntity<String> response;
 
@@ -134,7 +134,8 @@ public class FeedbackController {
    * @return Response entity with a message
    */
   @DeleteMapping("/all")
-  @Operation(summary = "Delete all feedback")
+  @Operation(summary = "Delete all feedback",
+      description = "Deletes all feedback entries from the application state")
   public ResponseEntity<String> deleteAllFeedback() {
     ResponseEntity<String> response;
     try {
@@ -154,7 +155,8 @@ public class FeedbackController {
    * @return The total number of feedback entries
    */
   @GetMapping("/count")
-  @Operation(summary = "Get feedback count")
+  @Operation(summary = "Get feedback count",
+      description = "Returns the total number of feedback entries in the system")
   public long getFeedbackCount() {
     return feedbackService.getFeedbackCount();
   }

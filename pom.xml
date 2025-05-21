@@ -18,7 +18,7 @@
     <description>flight-booking-backend</description>
 
     <properties>
-        <java.version>23</java.version>
+        <java.version>17</java.version>
     </properties>
 
     <dependencies>

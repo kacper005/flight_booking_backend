@@ -43,7 +43,7 @@ public class JwtUtil {
     long expirationTime = timeNow + 60 * 60 * 1000; // 1 hour
 
     return Jwts.builder()
-        .setSubject(String.valueOf(userDetails.getUserId())) // Nå bruker vi userId
+        .setSubject(String.valueOf(userDetails.getUserId()))
         .claim(ROLE_KEY, userDetails.getAuthorities())
         .claim("email", userDetails.getUsername())
         .setIssuedAt(new Date(timeNow))

@@ -18,24 +18,24 @@ public class Price {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name = "price_id")
-  @Schema(description = "The id of the price")
+  @Schema(description = "The id of the price", example = "1")
   private Integer priceId;
 
   @ManyToMany(mappedBy = "prices")
   @JsonIgnore
   private List<Flight> flights = new ArrayList<>();
 
-  @Schema(description = "The type of class for the flight")
+  @Schema(description = "The type of class for the flight", example = "Economy")
   private String classType;
 
   @Column(nullable = true)
-  @Schema(description = "The price of the flight")
+  @Schema(description = "The price of the flight", example = "399")
   private float price;
 
-  @Schema(description = "The name of the price provider")
+  @Schema(description = "The name of the price provider", example = "Expedia")
   private String priceProviderName;
 
-  @Schema(description = "The currency of the price")
+  @Schema(description = "The currency of the price", example = "NOK")
   private String currency;
 
   /** Default constructor. */
