@@ -24,8 +24,8 @@ public class CorsConfig {
       public void addCorsMappings(CorsRegistry registry) {
         registry
             .addMapping("/**")
-            .allowedOrigins( "http://localhost:5173",
-                "http://group03.web-tek.ninja", "http://10.212.25.210")
+            .allowedOrigins(
+                "http://localhost:5173", "http://group03.web-tek.ninja", "http://10.212.25.210")
             .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
             .allowedHeaders("*")
             .allowCredentials(true);
